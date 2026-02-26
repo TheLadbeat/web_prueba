@@ -1,0 +1,74 @@
+.contact {
+  background: var(--panel);
+  border-top: 1px solid var(--rail);
+}
+
+.contact-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contact-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+.contact-heading {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 7vw, 96px);
+  letter-spacing: 0.04em;
+  line-height: 0.9;
+  margin-bottom: 24px;
+}
+.contact-heading em {
+  font-style: normal;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(245, 242, 236, 0.2);
+}
+
+.contact-sub {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--dust);
+  margin-bottom: 48px;
+  line-height: 1.6;
+}
+
+.contact-email {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 48px);
+  letter-spacing: 0.08em;
+  color: var(--white);
+  display: inline-block;
+  border-bottom: 1px solid var(--rail);
+  padding-bottom: 6px;
+  transition: color var(--duration-fast), border-color var(--duration-fast);
+}
+.contact-email:hover { color: var(--gold); border-color: var(--gold); }
+
+.contact-social {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.soc-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--rail);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dust);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: border-color var(--duration-fast), color var(--duration-fast);
+}
+.soc-btn:hover { border-color: var(--gold); color: var(--gold); }

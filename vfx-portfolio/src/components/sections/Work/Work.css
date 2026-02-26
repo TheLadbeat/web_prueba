@@ -1,0 +1,117 @@
+.work { padding-top: 80px; }
+
+/* ── 12-column asymmetric grid ───────────────── */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+}
+
+/* Card positions */
+.wc:nth-child(1) { grid-column: 1 / 8;  aspect-ratio: 16/9; }
+.wc:nth-child(2) { grid-column: 8 / 13; aspect-ratio: 4/5;  }
+.wc:nth-child(3) { grid-column: 1 / 5;  aspect-ratio: 4/3;  }
+.wc:nth-child(4) { grid-column: 5 / 9;  aspect-ratio: 4/3;  }
+.wc:nth-child(5) { grid-column: 9 / 13; aspect-ratio: 4/3;  }
+.wc:nth-child(6) { grid-column: 1 / 6;  aspect-ratio: 16/9; }
+.wc:nth-child(7) { grid-column: 6 / 13; aspect-ratio: 16/9; }
+
+/* ── Card base ───────────────────────────────── */
+.wc {
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+.wc-bg {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.9s var(--ease-out);
+}
+.wc:hover .wc-bg { transform: scale(1.06); }
+
+/* ── Colour themes (mirror data/projects.js) ─── */
+.w1 .wc-bg { background: linear-gradient(145deg,#080b14,#0e1a30 35%,#1a3560 65%,#2a5598); }
+.w1 .wc-bg::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 35% 60%,rgba(60,140,255,.4) 0%,transparent 55%), radial-gradient(ellipse at 80% 20%,rgba(100,180,255,.2) 0%,transparent 35%); }
+
+.w2 .wc-bg { background: linear-gradient(145deg,#120a06,#2d1208 35%,#5c2510 65%,#9a4020); }
+.w2 .wc-bg::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 40% 55%,rgba(255,120,40,.45) 0%,transparent 50%); }
+
+.w3 .wc-bg { background: linear-gradient(145deg,#050f0a,#0a2015 35%,#153a25 65%,#24603a); }
+.w3 .wc-bg::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 30% 60%,rgba(40,200,100,.3) 0%,transparent 50%); }
+
+.w4 .wc-bg { background: linear-gradient(145deg,#0f0818,#200f38 35%,#3d1a6e 65%,#6633b8); }
+.w4 .wc-bg::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 60% 40%,rgba(160,80,255,.4) 0%,transparent 50%); }
+
+.w5 .wc-bg { background: linear-gradient(145deg,#0d0b08,#201c10 35%,#3d3520 65%,#6d5e38); }
+.w5 .wc-bg::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 50% 50%,rgba(210,180,80,.35) 0%,transparent 50%); }
+
+.w6 .wc-bg { background: linear-gradient(145deg,#080c14,#10182c 35%,#1a2e50 65%,#243d6e); }
+.w6 .wc-bg::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 25% 70%,rgba(40,100,220,.35) 0%,transparent 50%), radial-gradient(ellipse at 75% 30%,rgba(20,60,160,.25) 0%,transparent 40%); }
+
+.w7 .wc-bg { background: linear-gradient(145deg,#0a0808,#1a1010 35%,#301818 65%,#502020); }
+.w7 .wc-bg::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 60% 50%,rgba(200,60,40,.35) 0%,transparent 50%); }
+
+/* ── Overlay ─────────────────────────────────── */
+.wc-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6,6,10,.96) 0%, rgba(6,6,10,.4) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity var(--duration-base);
+  display: flex;
+  align-items: flex-end;
+}
+.wc:hover .wc-overlay { opacity: 1; }
+
+.wc-info {
+  padding: 28px 28px 32px;
+  width: 100%;
+  transform: translateY(10px);
+  transition: transform var(--duration-base);
+}
+.wc:hover .wc-info { transform: translateY(0); }
+
+.wc-cat {
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.wc-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.5vw, 34px);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.wc-role { font-size: 11px; color: var(--dust); }
+
+/* ── Badge ───────────────────────────────────── */
+.wc-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--white);
+  opacity: 0.4;
+  transition: opacity var(--duration-fast);
+  z-index: 1;
+}
+.wc:hover .wc-badge { opacity: 0; }
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 900px) {
+  .work-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
+  .wc:nth-child(n) { grid-column: auto; aspect-ratio: 4/3; }
+}
+
+@media (max-width: 480px) {
+  .work-grid { grid-template-columns: 1fr; }
+}

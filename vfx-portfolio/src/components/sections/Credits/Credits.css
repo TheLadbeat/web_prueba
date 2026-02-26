@@ -1,0 +1,105 @@
+.credits { overflow: hidden; }
+.credits-header { padding-bottom: 0; }
+
+/* ── Ticker ──────────────────────────────────── */
+.credits-ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  border-top: 1px solid var(--rail);
+  border-bottom: 1px solid var(--rail);
+  padding: 24px 0;
+  position: relative;
+  margin-top: -20px;
+}
+
+/* Fade edges */
+.credits-ticker-wrap::before,
+.credits-ticker-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.credits-ticker-wrap::before { left:  0; background: linear-gradient(to right, var(--ink), transparent); }
+.credits-ticker-wrap::after  { right: 0; background: linear-gradient(to left,  var(--ink), transparent); }
+
+.credits-ticker {
+  display: flex;
+  white-space: nowrap;
+  animation: tickerMove 35s linear infinite;
+}
+.credits-ticker:hover { animation-play-state: paused; }
+
+.credit-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 52px;
+  border-right: 1px solid var(--rail);
+}
+
+.credit-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  opacity: 0.5;
+  transition: opacity var(--duration-fast);
+}
+.credit-item:hover .credit-title { opacity: 1; }
+
+.credit-role {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-left: 14px;
+  border-left: 1px solid var(--rail);
+  padding-left: 14px;
+}
+
+/* ── Credits grid ────────────────────────────── */
+.credits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rail);
+  margin-top: 1px;
+}
+
+.credit-card {
+  background: var(--ink);
+  padding: 32px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background var(--duration-base);
+}
+.credit-card:hover { background: var(--panel); }
+
+.cc-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.cc-meta {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dust);
+}
+
+.cc-year {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 24px;
+  color: var(--rail);
+  transition: color var(--duration-base);
+  flex-shrink: 0;
+}
+.credit-card:hover .cc-year { color: var(--gold); }
+
+@media (max-width: 900px) { .credits-grid { grid-template-columns: 1fr; } }
