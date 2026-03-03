@@ -1,62 +1,89 @@
-import { useRef } from 'react';
-
-// Global styles (must come first)
-import './styles/globals.css';
-
-// UI — always mounted, z-index stacked above content
-import Grain        from './components/ui/Grain/Grain';
-import ProgressBar  from './components/ui/ProgressBar/ProgressBar';
-import Cursor       from './components/ui/Cursor/Cursor';
-
-// Layout
-import Header from './components/layout/Header/Header';
-import Footer from './components/layout/Footer/Footer';
-
-// Sections
-import Hero    from './components/sections/Hero/Hero';
-import Work    from './components/sections/Work/Work';
-import Reel    from './components/sections/Reel/Reel';
-import Stats   from './components/sections/Stats/Stats';
-import Skills  from './components/sections/Skills/Skills';
-import Credits from './components/sections/Credits/Credits';
-import Awards  from './components/sections/Awards/Awards';
-import About   from './components/sections/About/About';
-import Contact from './components/sections/Contact/Contact';
-
-// Hooks
-import { useReveal } from './hooks/useReveal';
+import { useState, useEffect, useCallback } from 'react'
+import Nav          from './components/layout/Nav'
+import Grain        from './components/ui/Grain'
+import ProgressBar  from './components/ui/ProgressBar'
+import Cursor       from './components/ui/Cursor'
+import Modal        from './components/ui/Modal'
+import MainPage     from './pages/MainPage'
+import ProjectsPage from './pages/ProjectsPage'
+import { useReveal } from './hooks/useReveal'
 
 export default function App() {
-  const navRef = useRef(null);
+  // ── Page routing: 'main' | 'projects'
+  const [page, setPage] = useState(
+    window.location.hash === '#projects' ? 'projects' : 'main'
+  )
 
-  // Activate scroll-reveal on all .reveal elements in the document
-  useReveal();
+  // ── Modal state
+  const [modalProject, setModalProject] = useState(null)
+
+  // ── Scroll reveal (re-run when page changes)
+  useReveal([page])
+
+  // ── Hash-based navigation
+  const showProjects = useCallback(() => {
+    history.pushState(null, '', '#projects')
+    setPage('projects')
+    window.scrollTo(0, 0)
+  }, [])
+
+  const showMain = useCallback(() => {
+    history.pushState(null, '', '#')
+    setPage('main')
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
+    const onHashChange = () => {
+      if (window.location.hash === '#projects') setPage('projects')
+      else setPage('main')
+    }
+    window.addEventListener('hashchange', onHashChange)
+    // Listen to custom event from Nav logo click
+    window.addEventListener('show-main', showMain)
+    return () => {
+      window.removeEventListener('hashchange', onHashChange)
+      window.removeEventListener('show-main', showMain)
+    }
+  }, [showMain])
+
+  // ── Nav scroll effect
+  useEffect(() => {
+    const handler = () => {
+      const nav = document.querySelector('.nav')
+      if (nav) nav.classList.toggle('scrolled', window.scrollY > 60)
+    }
+    window.addEventListener('scroll', handler, { passive: true })
+    return () => window.removeEventListener('scroll', handler)
+  }, [])
 
   return (
     <>
-      {/* ── Fixed / global UI layer ─────────────────── */}
+      {/* ── Persistent UI ── */}
       <Grain />
-      <ProgressBar navRef={navRef} />
+      <ProgressBar />
       <Cursor />
+      <Nav
+        page={page}
+        onShowProjects={showProjects}
+      />
+      <Modal
+        project={modalProject}
+        onClose={() => setModalProject(null)}
+      />
 
-      {/* ── Header ─────────────────────────────────── */}
-      <Header navRef={navRef} />
-
-      {/* ── Main content ───────────────────────────── */}
-      <main id="main-content">
-        <Hero />
-        <Work />
-        <Reel />
-        <Stats />
-        <Skills />
-        <Credits />
-        <Awards />
-        <About />
-        <Contact />
-      </main>
-
-      {/* ── Footer ─────────────────────────────────── */}
-      <Footer />
+      {/* ── Pages ── */}
+      {page === 'main' ? (
+        <MainPage
+          onOpenModal={setModalProject}
+          onShowProjects={showProjects}
+        />
+      ) : (
+        <ProjectsPage
+          onBack={showMain}
+          onOpenModal={setModalProject}
+        />
+      )}
     </>
-  );
+  )
 }

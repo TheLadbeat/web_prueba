@@ -1,36 +1,20 @@
-// ═══════════════════════════════════════════════
-//  HOOK — useReveal
-//  Attaches an IntersectionObserver to all
-//  elements with the class "reveal" inside
-//  a given container ref, adding "visible" when
-//  they enter the viewport.
-// ═══════════════════════════════════════════════
-
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
 /**
- * @param {React.RefObject} containerRef - scope root (defaults to document)
- * @param {number}          threshold    - intersection ratio trigger (default 0.12)
+ * Observes all .reveal elements and adds .visible when they enter the viewport.
+ * Re-runs when `deps` change (e.g. after a page transition).
  */
-export function useReveal(containerRef = null, threshold = 0.12) {
+export function useReveal(deps = []) {
   useEffect(() => {
-    const root = containerRef?.current ?? document;
-    const elements = root.querySelectorAll('.reveal');
-
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target); // animate once
-          }
-        });
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add('visible')
+        })
       },
-      { threshold }
-    );
-
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, [containerRef, threshold]);
+      { threshold: 0.12 }
+    )
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, deps) // eslint-disable-line react-hooks/exhaustive-deps
 }

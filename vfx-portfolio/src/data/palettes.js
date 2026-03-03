@@ -1,0 +1,36 @@
+// Art palettes — one gradient per project color index (0–14)
+export const artPalettes = [
+  'linear-gradient(135deg,#04060f,#0d1a38 40%,#1a3060 70%,#0a1220)',
+  'linear-gradient(135deg,#0a0500,#2a1005 40%,#5a2510 70%,#3a1508)',
+  'linear-gradient(135deg,#030808,#081a14 40%,#103525 70%,#061510)',
+  'linear-gradient(135deg,#080210,#180540 40%,#3a0e70 70%,#200840)',
+  'linear-gradient(135deg,#070500,#1c1500 40%,#3a2c00 70%,#281e00)',
+  'linear-gradient(135deg,#020508,#060e20 40%,#0a1e50 70%,#060c30)',
+  'linear-gradient(135deg,#060202,#180505 40%,#340c0c 70%,#200606)',
+  'linear-gradient(135deg,#02060a,#041828 40%,#083040 70%,#041018)',
+  'linear-gradient(135deg,#080008,#200020 40%,#440044 70%,#2a002a)',
+  'linear-gradient(135deg,#020802,#0a200a 40%,#183018 70%,#0a1a0a)',
+  'linear-gradient(135deg,#080402,#241008 40%,#4a2010 70%,#301408)',
+  'linear-gradient(135deg,#030408,#0c1020 40%,#1a2040 70%,#101828)',
+  'linear-gradient(135deg,#080200,#201000 40%,#402000 70%,#281400)',
+  'linear-gradient(135deg,#020408,#081018 40%,#102030 70%,#081420)',
+  'linear-gradient(135deg,#060802,#181e04 40%,#303808 70%,#202804)',
+]
+
+export const accentColors = [
+  'rgba(60,120,255,.35)',
+  'rgba(220,110,30,.4)',
+  'rgba(30,160,90,.35)',
+  'rgba(130,50,230,.4)',
+  'rgba(190,160,30,.4)',
+  'rgba(30,80,200,.4)',
+  'rgba(190,55,30,.4)',
+  'rgba(0,180,220,.35)',
+  'rgba(200,0,200,.35)',
+  'rgba(60,180,60,.32)',
+  'rgba(240,130,50,.35)',
+  'rgba(80,100,220,.38)',
+  'rgba(220,150,20,.38)',
+  'rgba(20,140,180,.38)',
+  'rgba(160,200,20,.32)',
+]

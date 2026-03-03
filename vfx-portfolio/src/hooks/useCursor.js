@@ -1,81 +1,56 @@
-// ═══════════════════════════════════════════════
-//  HOOK — useCursor
-//  Tracks mouse position for custom cursor,
-//  with a lagging ring effect via rAF.
-// ═══════════════════════════════════════════════
+import { useEffect, useRef } from 'react'
 
-import { useEffect, useRef, useCallback } from 'react';
-
+/**
+ * Custom cursor: small dot follows exactly, ring follows with soft lerp.
+ * Call once in App.
+ */
 export function useCursor() {
-  const cursorRef = useRef(null);
-  const ringRef   = useRef(null);
-
-  // Live mouse coords (no React state → zero re-renders)
-  const mouse = useRef({ x: 0, y: 0 });
-  const ring  = useRef({ x: 0, y: 0 });
-  const rafId = useRef(null);
-
-  /** Move dot to exact mouse position */
-  const onMouseMove = useCallback((e) => {
-    mouse.current.x = e.clientX;
-    mouse.current.y = e.clientY;
-
-    if (cursorRef.current) {
-      cursorRef.current.style.left = `${e.clientX}px`;
-      cursorRef.current.style.top  = `${e.clientY}px`;
-    }
-  }, []);
-
-  /** rAF loop: lerp ring toward cursor */
-  const animateRing = useCallback(() => {
-    ring.current.x += (mouse.current.x - ring.current.x) * 0.11;
-    ring.current.y += (mouse.current.y - ring.current.y) * 0.11;
-
-    if (ringRef.current) {
-      ringRef.current.style.left = `${ring.current.x}px`;
-      ringRef.current.style.top  = `${ring.current.y}px`;
-    }
-    rafId.current = requestAnimationFrame(animateRing);
-  }, []);
-
-  /** Add/remove "big" class on interactive elements */
-  const addHoverListeners = useCallback(() => {
-    const selectors = 'a, button, .wc, .reel-btn, .skill-card, .credit-card, .award-item, [data-cursor-big]';
-    const els = document.querySelectorAll(selectors);
-
-    const enter = () => ringRef.current?.classList.add('big');
-    const leave = () => ringRef.current?.classList.remove('big');
-
-    els.forEach((el) => {
-      el.addEventListener('mouseenter', enter);
-      el.addEventListener('mouseleave', leave);
-    });
-
-    // return cleanup
-    return () => {
-      els.forEach((el) => {
-        el.removeEventListener('mouseenter', enter);
-        el.removeEventListener('mouseleave', leave);
-      });
-    };
-  }, []);
+  const dotRef  = useRef(null)
+  const ringRef = useRef(null)
+  const pos     = useRef({ mx: 0, my: 0, rx: 0, ry: 0 })
 
   useEffect(() => {
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
-    rafId.current = requestAnimationFrame(animateRing);
+    const dot  = dotRef.current
+    const ring = ringRef.current
+    if (!dot || !ring) return
 
-    // Small delay so all DOM elements are mounted before attaching
-    const timer = setTimeout(() => {
-      const cleanup = addHoverListeners();
-      return cleanup;
-    }, 500);
+    const onMove = (e) => {
+      pos.current.mx = e.clientX
+      pos.current.my = e.clientY
+      dot.style.left = e.clientX + 'px'
+      dot.style.top  = e.clientY + 'px'
+    }
 
+    // Lerp ring with factor 0.28 — subtle delay, not sluggish
+    let rafId
+    const animate = () => {
+      const p = pos.current
+      p.rx += (p.mx - p.rx) * 0.28
+      p.ry += (p.my - p.ry) * 0.28
+      ring.style.left = p.rx + 'px'
+      ring.style.top  = p.ry + 'px'
+      rafId = requestAnimationFrame(animate)
+    }
+    animate()
+
+    // Hover targets: grow ring on interactive elements
+    const grow  = () => ring.classList.add('big')
+    const shrink = () => ring.classList.remove('big')
+
+    const attachHover = () => {
+      document.querySelectorAll('a, button, .wc, .wc-see-all, .ap-card, .credit-card').forEach(el => {
+        el.addEventListener('mouseenter', grow)
+        el.addEventListener('mouseleave', shrink)
+      })
+    }
+    attachHover()
+
+    document.addEventListener('mousemove', onMove)
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(rafId.current);
-      clearTimeout(timer);
-    };
-  }, [onMouseMove, animateRing, addHoverListeners]);
+      document.removeEventListener('mousemove', onMove)
+      cancelAnimationFrame(rafId)
+    }
+  }, [])
 
-  return { cursorRef, ringRef };
+  return { dotRef, ringRef }
 }
