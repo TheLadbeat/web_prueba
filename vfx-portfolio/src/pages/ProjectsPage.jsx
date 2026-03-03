@@ -3,19 +3,15 @@ import { projects } from "../data/projects"
 import { artPalettes, accentColors } from "../data/palettes"
 import { useReveal } from "../hooks/useReveal"
 
-/**
- * A single card in the All Work grid.
- * Uses images.square if provided, falls back to CSS gradient palette.
- */
 function ProjectCard({ project, onClick }) {
   const acc    = accentColors[project.color]
-  const hasImg = project.images?.square
+  const hasImg = Boolean(project.images?.square)
 
   return (
     <div className="ap-card" onClick={() => onClick(project)}>
       {/* Background art — image or gradient */}
       <div
-        className="ap-card-art"
+        className={`ap-card-art${hasImg ? "" : " gradient-only"}`}
         style={hasImg ? undefined : { background: artPalettes[project.color] }}
       >
         {hasImg ? (
@@ -24,6 +20,7 @@ function ProjectCard({ project, onClick }) {
             src={project.images.square}
             alt={project.title}
             loading="lazy"
+            draggable="false"
           />
         ) : (
           <div style={{
@@ -48,10 +45,8 @@ function ProjectCard({ project, onClick }) {
 }
 
 export default function ProjectsPage({ onBack, onOpenModal }) {
-  // Re-run reveal animations after the page mounts
   useReveal(["projects"])
 
-  // Group by year, newest first
   const byYear = useMemo(() => {
     const map = {}
     projects.forEach(p => {
@@ -65,10 +60,6 @@ export default function ProjectsPage({ onBack, onOpenModal }) {
 
   return (
     <div className="projects-page">
-      {/*
-        No secondary header here — the main Nav is always visible.
-        projects-page already has padding-top: var(--nav-h) in CSS.
-      */}
       <div className="ap-content">
         {byYear.map(({ year, items }) => (
           <div key={year}>
