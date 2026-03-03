@@ -55,9 +55,9 @@ export const projects = [
     featured: true,
     order:   1,           // ← 1st slot on the main grid
     images: {
-      square:  null,      // e.g. '/images/society-square.jpg'
-      wide:    null,
-      poster:  null,
+      square:  "/images/society_of_the_snow/square.webp",      // e.g. '/images/society-square.jpg'
+      wide:    "/images/society_of_the_snow/wide.webp",
+      poster:  "/images/society_of_the_snow/poster.webp",
     },
   },
 
