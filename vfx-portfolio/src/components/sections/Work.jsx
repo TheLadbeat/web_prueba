@@ -2,74 +2,109 @@ import { useState, useRef } from 'react'
 import { featuredProjects, projects } from '../../data/projects'
 import { artPalettes, accentColors } from '../../data/palettes'
 
-function ProjectCard({ project, idx, onHover, onLeave, onClick }) {
-  const acc = accentColors[project.color]
+/**
+ * A single project card on the main Work grid.
+ * Uses images.square when available, falls back to CSS gradient.
+ * Uses images.wide for the section-level hover background.
+ */
+function ProjectCard({ project, onHover, onLeave, onClick }) {
+  const acc     = accentColors[project.color]
+  const hasImg  = project.images?.square
+
   return (
     <div
       className="wc"
-      onMouseEnter={() => onHover(idx)}
+      onMouseEnter={onHover}
       onMouseLeave={onLeave}
       onClick={() => onClick(project)}
     >
-      {/* Art background */}
+      {/* Art background — image or gradient */}
       <div
         className="wc-art"
-        style={{ background: artPalettes[project.color] }}
+        style={hasImg ? undefined : { background: artPalettes[project.color] }}
       >
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: `radial-gradient(ellipse at 50% 45%, ${acc} 0%, transparent 60%)`
-        }} />
+        {hasImg ? (
+          <img
+            className="wc-art-img"
+            src={project.images.square}
+            alt={project.title}
+            loading="lazy"
+          />
+        ) : (
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: `radial-gradient(ellipse at 50% 45%, ${acc} 0%, transparent 60%)`
+          }} />
+        )}
       </div>
 
-      {/* Static poster content */}
+      {/* Poster content */}
       <div className="wc-poster-content">
         <span className="wc-format-badge">{project.format}</span>
         <div className="wc-poster-title">{project.title}</div>
       </div>
-
       <span className="wc-year-badge">{project.year}</span>
 
       {/* Hover overlay */}
       <div className="wc-overlay">
         <div className="wc-overlay-inner">
-          <p className="wc-ov-cat">{project.cat}</p>
+          <p  className="wc-ov-cat"  >{project.cat}</p>
           <h3 className="wc-ov-title">{project.title}</h3>
-          <p className="wc-ov-role">{project.studio}</p>
+          <p  className="wc-ov-role" >{project.studio}</p>
         </div>
       </div>
     </div>
   )
 }
 
-// Build a unique list of color indices present in featured projects,
-// mapped to bg layer indices 0–N for CSS classes.
-const BG_LAYERS = Array.from({ length: 15 }, (_, i) => i) // 0-14
+// All unique palette indices that may appear as bg layers
+const BG_INDICES = Array.from({ length: 15 }, (_, i) => i)
 
 export default function Work({ onOpenModal, onShowProjects }) {
-  const [activeColor, setActiveColor] = useState(null)
+  const [activeBg, setActiveBg] = useState(null) // palette color index OR 'img'
+  const [hoverWide, setHoverWide] = useState(null) // wide image src or null
   const timerRef = useRef(null)
 
-  const handleHover = (idx) => {
+  const handleHover = (project) => {
     clearTimeout(timerRef.current)
-    setActiveColor(featuredProjects[idx]?.color ?? null)
+    setActiveBg(project.color)
+    setHoverWide(project.images?.wide || null)
   }
 
   const handleLeave = () => {
-    timerRef.current = setTimeout(() => setActiveColor(null), 180)
+    timerRef.current = setTimeout(() => {
+      setActiveBg(null)
+      setHoverWide(null)
+    }, 180)
   }
 
   return (
     <section id="work">
-      {/* ── Cinematic background stage ── */}
+      {/* ── Cinematic bg stage ── */}
       <div id="work-bg-stage">
-        <div className={`wbg wbg-default${activeColor === null ? ' active' : ''}`} />
-        {BG_LAYERS.map(i => (
+        {/* Default dark bg */}
+        <div className={`wbg wbg-default${activeBg === null ? ' active' : ''}`} />
+
+        {/* Gradient layers (fallback) */}
+        {BG_INDICES.map(i => (
           <div
             key={i}
-            className={`wbg wbg-${i}${activeColor === i ? ' active' : ''}`}
+            className={`wbg wbg-${i}${activeBg === i && !hoverWide ? ' active' : ''}`}
           />
         ))}
+
+        {/* Wide image layer — fades in when project has images.wide */}
+        {hoverWide && (
+          <div
+            className="wbg active"
+            style={{
+              backgroundImage: `url(${hoverWide})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'brightness(.4) saturate(.8)',
+            }}
+          />
+        )}
       </div>
 
       <div className="s-header reveal">
@@ -79,12 +114,11 @@ export default function Work({ onOpenModal, onShowProjects }) {
       </div>
 
       <div className="work-grid">
-        {featuredProjects.map((p, i) => (
+        {featuredProjects.map(p => (
           <ProjectCard
             key={p.id}
             project={p}
-            idx={i}
-            onHover={handleHover}
+            onHover={() => handleHover(p)}
             onLeave={handleLeave}
             onClick={onOpenModal}
           />

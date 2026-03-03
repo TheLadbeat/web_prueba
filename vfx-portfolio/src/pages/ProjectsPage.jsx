@@ -1,20 +1,36 @@
-import { useMemo } from 'react'
-import { projects } from '../data/projects'
-import { artPalettes, accentColors } from '../data/palettes'
-import { useReveal } from '../hooks/useReveal'
+import { useMemo } from "react"
+import { projects } from "../data/projects"
+import { artPalettes, accentColors } from "../data/palettes"
+import { useReveal } from "../hooks/useReveal"
 
+/**
+ * A single card in the All Work grid.
+ * Uses images.square if provided, falls back to CSS gradient palette.
+ */
 function ProjectCard({ project, onClick }) {
-  const acc = accentColors[project.color]
+  const acc    = accentColors[project.color]
+  const hasImg = project.images?.square
+
   return (
     <div className="ap-card" onClick={() => onClick(project)}>
+      {/* Background art — image or gradient */}
       <div
         className="ap-card-art"
-        style={{ background: artPalettes[project.color] }}
+        style={hasImg ? undefined : { background: artPalettes[project.color] }}
       >
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: `radial-gradient(ellipse at 50% 45%, ${acc} 0%, transparent 60%)`
-        }} />
+        {hasImg ? (
+          <img
+            className="ap-card-img"
+            src={project.images.square}
+            alt={project.title}
+            loading="lazy"
+          />
+        ) : (
+          <div style={{
+            position: "absolute", inset: 0,
+            background: `radial-gradient(ellipse at 50% 45%, ${acc} 0%, transparent 60%)`
+          }} />
+        )}
       </div>
 
       <span className="ap-card-format">{project.format}</span>
@@ -32,9 +48,10 @@ function ProjectCard({ project, onClick }) {
 }
 
 export default function ProjectsPage({ onBack, onOpenModal }) {
-  useReveal(['projects'])
+  // Re-run reveal animations after the page mounts
+  useReveal(["projects"])
 
-  // Group projects by year descending
+  // Group by year, newest first
   const byYear = useMemo(() => {
     const map = {}
     projects.forEach(p => {
@@ -48,16 +65,10 @@ export default function ProjectsPage({ onBack, onOpenModal }) {
 
   return (
     <div className="projects-page">
-      {/* Sticky header */}
-      <header className="ap-header">
-        <div className="ap-header-left">
-          <button className="ap-back" onClick={onBack}>Back</button>
-          <h1 className="ap-title">ALL WORK</h1>
-          <span className="ap-count">{projects.length} projects · 2023–2026</span>
-        </div>
-      </header>
-
-      {/* Year-divided grid */}
+      {/*
+        No secondary header here — the main Nav is always visible.
+        projects-page already has padding-top: var(--nav-h) in CSS.
+      */}
       <div className="ap-content">
         {byYear.map(({ year, items }) => (
           <div key={year}>
