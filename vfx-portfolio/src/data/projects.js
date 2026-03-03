@@ -111,7 +111,7 @@ export const projects = [
     tags: ['Nuke', 'Blender', 'ShotGrid'],
     format: 'TV Series',
     color: 11,
-    featured: false,
+    featured: true,
   },
 
   // ── MUSIC VIDEOS ─────────────────────────────────────────
