@@ -1,7 +1,7 @@
 // Replace YOUTUBE_VIDEO_ID with your actual YouTube video ID.
 // Example: for https://www.youtube.com/watch?v=dQw4w9WgXcQ
 //           the ID is dQw4w9WgXcQ
-const YOUTUBE_VIDEO_ID = 'YOUTUBE_VIDEO_ID'
+const YOUTUBE_VIDEO_ID = '2n5tyYBc9Og'
 
 const EMBED_URL =
   `https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}` +
