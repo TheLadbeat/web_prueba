@@ -12,9 +12,9 @@ export default function Reel() {
     <div id="reel">
       <div className="reel-bg-glow" aria-hidden="true" />
       <div className="reel-inner">
-        <p className="reel-label">Demo Reel &middot; 2025</p>
-        <h2 className="reel-title">MARCOS MUNOZ &mdash; VFX COMPOSITOR</h2>
-        <div className="reel-embed-wrap">
+        <p className="reel-label reveal">Demo Reel &middot; 2025</p>
+        <h2 className="reel-title reveal reveal-delay-1">MARCOS MUNOZ &mdash; VFX COMPOSITOR</h2>
+        <div className="reel-embed-wrap reveal-scale reveal-delay-2">
           <iframe
             src={EMBED_URL}
             title="Marcos Munoz VFX Demo Reel 2025"

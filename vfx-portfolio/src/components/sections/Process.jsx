@@ -41,8 +41,8 @@ export default function Process() {
       </div>
 
       <div className="awards-list">
-        {STEPS.map(s => (
-          <div key={s.step} className="award-item reveal">
+        {STEPS.map((s, i) => (
+          <div key={s.step} className={`award-item reveal${i < 5 ? ' reveal-delay-' + (i + 1) : ''}`}>
             <div className="award-step">{s.step}</div>
             <div>
               <div className="award-name">{s.name}</div>

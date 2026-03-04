@@ -1,11 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
-/**
- * Sticky nav with scroll detection + mobile hamburger drawer.
- */
-export default function Nav({ onShowProjects, page }) {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+export default function Nav({ onShowProjects }) {
+  const [scrolled,  setScrolled]  = useState(false)
+  const [menuOpen,  setMenuOpen]  = useState(false)
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 60)
@@ -13,49 +10,44 @@ export default function Nav({ onShowProjects, page }) {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  // Close drawer on route change
-  useEffect(() => { setMenuOpen(false) }, [page])
-
-  // Lock body scroll when drawer is open
+  // Lock body scroll when mobile drawer is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
+  const close = () => setMenuOpen(false)
+
   const handleWork = (e) => {
     e.preventDefault()
-    setMenuOpen(false)
+    close()
     onShowProjects()
   }
 
-  const handleLogo = (e) => {
-    if (page === 'projects') {
-      e.preventDefault()
-      setMenuOpen(false)
-      window.dispatchEvent(new Event('show-main'))
-    }
+  const smoothTo = (id) => (e) => {
+    e.preventDefault()
+    close()
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
-
-  const close = () => setMenuOpen(false)
 
   return (
     <>
       <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
-        <a href="#" className="nav-logo" onClick={handleLogo}>
+        <a href="#" className="nav-logo">
           <span className="nav-logo-mark">MM</span>
           MARCOS MUÑOZ
         </a>
 
         {/* Desktop links */}
         <ul className="nav-links">
-          <li><a href="#projects" onClick={handleWork} className={page === 'projects' ? 'active' : ''}>Work</a></li>
-          <li><a href="#credits"  onClick={close}>Credits</a></li>
-          <li><a href="#process"  onClick={close}>Process</a></li>
-          <li><a href="#about"    onClick={close}>About</a></li>
+          <li><a href="#work"    onClick={handleWork}>Work</a></li>
+          <li><a href="#credits" onClick={smoothTo('credits')}>Credits</a></li>
+          <li><a href="#process" onClick={smoothTo('process')}>Process</a></li>
+          <li><a href="#about"   onClick={smoothTo('about')}>About</a></li>
         </ul>
 
         <div className="nav-right">
-          <a href="#contact" className="nav-cta" onClick={close}>Get in touch</a>
+          <a href="#contact" className="nav-cta" onClick={smoothTo('contact')}>Get in touch</a>
         </div>
 
         {/* Mobile burger */}
@@ -70,13 +62,13 @@ export default function Nav({ onShowProjects, page }) {
 
       {/* Mobile drawer */}
       <div className={`nav-drawer${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
-        <ul onClick={close}>
-          <li><a href="#projects" onClick={handleWork}>Work</a></li>
-          <li><a href="#credits">Credits</a></li>
-          <li><a href="#process">Process</a></li>
-          <li><a href="#about">About</a></li>
+        <ul>
+          <li><a href="#work"    onClick={handleWork}>Work</a></li>
+          <li><a href="#credits" onClick={smoothTo('credits')}>Credits</a></li>
+          <li><a href="#process" onClick={smoothTo('process')}>Process</a></li>
+          <li><a href="#about"   onClick={smoothTo('about')}>About</a></li>
         </ul>
-        <a href="#contact" className="drawer-cta" onClick={close}>Get in touch</a>
+        <a href="#contact" className="drawer-cta" onClick={smoothTo('contact')}>Get in touch</a>
       </div>
     </>
   )

@@ -3,7 +3,7 @@ export default function About() {
     <section id="about" style={{ padding: 0 }}>
       <div className="about-grid">
         {/* ── Visual placeholder ── */}
-        <div className="about-visual">
+        <div className="about-visual reveal-left">
           <div className="about-visual-art" />
           <div className="about-placeholder">
             <div className="about-placeholder-ring">
@@ -20,7 +20,7 @@ export default function About() {
         </div>
 
         {/* ── Content ── */}
-        <div className="about-content">
+        <div className="about-content reveal-right">
           <p className="about-eyebrow">04 · About</p>
           <h2 className="about-heading">VFX Digital<br />Compositor</h2>
 

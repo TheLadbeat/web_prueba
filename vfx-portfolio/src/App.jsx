@@ -1,51 +1,20 @@
-import { useState, useEffect, useCallback } from 'react'
-import Nav          from './components/layout/Nav'
-import Grain        from './components/ui/Grain'
-import ProgressBar  from './components/ui/ProgressBar'
-import Cursor       from './components/ui/Cursor'
-import Modal        from './components/ui/Modal'
-import MainPage     from './pages/MainPage'
-import ProjectsPage from './pages/ProjectsPage'
-import { useReveal } from './hooks/useReveal'
+import { useState, useEffect } from 'react'
+import Nav               from './components/layout/Nav'
+import Grain             from './components/ui/Grain'
+import ProgressBar       from './components/ui/ProgressBar'
+import Cursor            from './components/ui/Cursor'
+import Modal             from './components/ui/Modal'
+import AllProjectsModal  from './components/ui/AllProjectsModal'
+import MainPage          from './pages/MainPage'
+import { useReveal }     from './hooks/useReveal'
 
 export default function App() {
-  // ── Page routing: 'main' | 'projects'
-  const [page, setPage] = useState(
-    window.location.hash === '#projects' ? 'projects' : 'main'
-  )
-
   // ── Modal state
+  const [allOpen,      setAllOpen]      = useState(false)
   const [modalProject, setModalProject] = useState(null)
 
-  // ── Scroll reveal (re-run when page changes)
-  useReveal([page])
-
-  // ── Hash-based navigation
-  const showProjects = useCallback(() => {
-    history.pushState(null, '', '#projects')
-    setPage('projects')
-    window.scrollTo(0, 0)
-  }, [])
-
-  const showMain = useCallback(() => {
-    history.pushState(null, '', '#')
-    setPage('main')
-    window.scrollTo(0, 0)
-  }, [])
-
-  useEffect(() => {
-    const onHashChange = () => {
-      if (window.location.hash === '#projects') setPage('projects')
-      else setPage('main')
-    }
-    window.addEventListener('hashchange', onHashChange)
-    // Listen to custom event from Nav logo click
-    window.addEventListener('show-main', showMain)
-    return () => {
-      window.removeEventListener('hashchange', onHashChange)
-      window.removeEventListener('show-main', showMain)
-    }
-  }, [showMain])
+  // ── Reveal — re-run when either modal opens (new .reveal nodes appear)
+  useReveal([allOpen, !!modalProject])
 
   // ── Nav scroll effect
   useEffect(() => {
@@ -63,27 +32,27 @@ export default function App() {
       <Grain />
       <ProgressBar />
       <Cursor />
-      <Nav
-        page={page}
-        onShowProjects={showProjects}
+
+      <Nav onShowProjects={() => setAllOpen(true)} />
+
+      {/* All-projects modal — z 7500, sits below project-detail modal */}
+      <AllProjectsModal
+        open={allOpen}
+        onClose={() => setAllOpen(false)}
+        onOpenProject={(p) => setModalProject(p)}
       />
+
+      {/* Project-detail modal — z 8200, sits above everything */}
       <Modal
         project={modalProject}
         onClose={() => setModalProject(null)}
       />
 
-      {/* ── Pages ── */}
-      {page === 'main' ? (
-        <MainPage
-          onOpenModal={setModalProject}
-          onShowProjects={showProjects}
-        />
-      ) : (
-        <ProjectsPage
-          onBack={showMain}
-          onOpenModal={setModalProject}
-        />
-      )}
+      {/* Single main page — always mounted, never swapped */}
+      <MainPage
+        onOpenModal={setModalProject}
+        onShowProjects={() => setAllOpen(true)}
+      />
     </>
   )
 }

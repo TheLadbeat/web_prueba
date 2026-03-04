@@ -1,38 +1,39 @@
-import { useEffect } from "react"
-import { artPalettes, accentColors } from "../../data/palettes"
+import { useEffect } from 'react'
+import { artPalettes, accentColors }   from '../../data/palettes'
+import { lockScroll, unlockScroll }    from '../../utils/scrollLock'
 
 /**
- * Modal — project detail overlay.
- * Poster panel:
- *   - uses images.poster if provided (object-fit cover)
- *   - falls back to CSS gradient palette
+ * Project-detail modal — z-index 8200.
+ * Can open from the main page OR from AllProjectsModal.
+ * Uses the shared scrollLock (ref-counted) so the page stays frozen
+ * regardless of what is already locked beneath it.
  */
 export default function Modal({ project, onClose }) {
   const open = !!project
 
-  // Close on Escape
+  // Scroll lock
+  useEffect(() => {
+    if (open) lockScroll()
+    else unlockScroll()
+    return () => { if (open) unlockScroll() }
+  }, [open])
+
+  // Escape key
   useEffect(() => {
     if (!open) return
-    const handler = (e) => { if (e.key === "Escape") onClose() }
-    window.addEventListener("keydown", handler)
-    return () => window.removeEventListener("keydown", handler)
+    const h = (e) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', h)
+    return () => window.removeEventListener('keydown', h)
   }, [open, onClose])
-
-  // Lock body scroll when open
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : ""
-    return () => { document.body.style.overflow = "" }
-  }, [open])
 
   const p = project
 
   return (
-    <div className={`modal${open ? " open" : ""}`} role="dialog" aria-modal="true">
+    <div className={`modal${open ? ' open' : ''}`} role="dialog" aria-modal="true">
       <div className="modal-backdrop" onClick={onClose} />
 
       {p && (
         <div className="modal-box">
-
           {/* Left panel: text */}
           <div className="modal-left">
             <div className="modal-label">{p.cat}</div>
@@ -66,29 +67,27 @@ export default function Modal({ project, onClose }) {
             </div>
           </div>
 
-          {/* Right panel: poster image or gradient */}
+          {/* Right panel: poster image or gradient fallback */}
           <div className="modal-poster">
             <div
               className="modal-poster-bg"
               style={p.images?.poster ? undefined : { background: artPalettes[p.color] }}
             >
               {p.images?.poster ? (
-                /* Real poster image */
                 <img
                   className="modal-poster-img"
                   src={p.images.poster}
                   alt={p.title}
                 />
               ) : (
-                /* Gradient fallback */
                 <>
                   <div style={{
-                    position: "absolute", inset: 0,
+                    position: 'absolute', inset: 0,
                     background: `radial-gradient(ellipse at 50% 38%, ${accentColors[p.color]} 0%, transparent 58%)`
                   }} />
                   <div style={{
-                    position: "absolute", inset: 0,
-                    background: "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 3px)"
+                    position: 'absolute', inset: 0,
+                    background: 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 3px)'
                   }} />
                 </>
               )}
@@ -96,7 +95,7 @@ export default function Modal({ project, onClose }) {
             <div className="modal-poster-overlay" />
           </div>
 
-          {/* Close button */}
+          {/* Close */}
           <button className="modal-close" onClick={onClose} aria-label="Close">
             &#x2715;
           </button>
