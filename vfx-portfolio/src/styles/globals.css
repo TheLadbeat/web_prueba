@@ -296,7 +296,7 @@ section { padding: 90px var(--side); }
 }
 .wbg {
   position: absolute; inset: 0;
-  opacity: 0; transition: opacity .9s cubic-bezier(.4,0,.2,1); will-change: opacity;
+  opacity: 0; transition: opacity 1.1s cubic-bezier(.4,0,.2,1); will-change: opacity;
 }
 .wbg.active { opacity: 1; }
 .wbg-default { background: radial-gradient(ellipse at 30% 50%, rgba(20,20,40,.9) 0%, #06060a 70%); }
@@ -334,7 +334,7 @@ section { padding: 90px var(--side); }
 .wbg-img {
   position: absolute; inset: -24px; /* negative inset so blur edges don't show */
   opacity: 0;
-  transition: opacity .9s cubic-bezier(.4,0,.2,1);
+  transition: opacity 1.0s cubic-bezier(.4,0,.2,1);
   background-size: cover;
   background-position: center;
   filter: blur(5px) brightness(.32) saturate(.75);

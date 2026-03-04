@@ -1,18 +1,26 @@
 /**
- * Reference-counted scroll lock.
- * Multiple callers (AllProjectsModal + project Modal) each call lock/unlock;
- * the page only physically unlocks when the last caller releases.
+ * Scroll lock — reference-counted, zero visual jump.
+ *
+ * Strategy: add overflow:hidden to <html> (the scroll root).
+ * The browser keeps the current scroll position exactly.
+ * We also compensate for the scrollbar disappearing with padding-right
+ * so the layout does not shift horizontally.
+ *
+ * Multiple callers (AllProjectsModal + project Modal) can each
+ * lock/unlock; the page only unlocks when the last caller releases.
  */
-let lockCount = 0
-let savedY    = 0
+
+let lockCount  = 0
+let savedPadding = ''
 
 export function lockScroll() {
   if (lockCount === 0) {
-    savedY = window.scrollY
-    document.body.style.overflow = 'hidden'
-    document.body.style.position = 'fixed'
-    document.body.style.top      = `-${savedY}px`
-    document.body.style.width    = '100%'
+    const scrollbarW = window.innerWidth - document.documentElement.clientWidth
+    savedPadding = document.body.style.paddingRight
+    if (scrollbarW > 0) {
+      document.body.style.paddingRight = `${scrollbarW}px`
+    }
+    document.documentElement.style.overflow = 'hidden'
   }
   lockCount++
 }
@@ -20,10 +28,7 @@ export function lockScroll() {
 export function unlockScroll() {
   lockCount = Math.max(0, lockCount - 1)
   if (lockCount === 0) {
-    document.body.style.overflow = ''
-    document.body.style.position = ''
-    document.body.style.top      = ''
-    document.body.style.width    = ''
-    window.scrollTo(0, savedY)
+    document.documentElement.style.overflow = ''
+    document.body.style.paddingRight = savedPadding
   }
 }
