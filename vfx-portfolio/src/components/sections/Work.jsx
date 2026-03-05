@@ -107,7 +107,7 @@ export default function Work({ onOpenModal, onShowProjects }) {
     leaveTimer.current = setTimeout(() => {
       setActiveBg(null)
       setSlots(s => s.map(slot => ({ ...slot, active: false })))
-    }, 600)
+    }, 80)
   }, [])
 
   const anyImgActive = slots.some(s => s.active)
