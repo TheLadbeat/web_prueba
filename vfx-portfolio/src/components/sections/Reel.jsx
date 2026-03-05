@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 // ── Paste your YouTube video ID here ──────────────────────────
-const YOUTUBE_VIDEO_ID = 'YOUTUBE_VIDEO_ID'
+const YOUTUBE_VIDEO_ID = '2n5tyYBc9Og'
 
 // Thumbnail: YouTube serves a maxresdefault, hqdefault, etc.
 // We use hqdefault (480×360) as a universal fallback.
