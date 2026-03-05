@@ -1,39 +1,53 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * Custom cursor: dot follows exactly, ring follows with soft lerp (.28 factor).
- * Automatically disabled on touch/mobile devices — body.touch-device class
- * is also added so CSS can restore native cursor.
+ * Custom cursor: dot follows exactly, ring lerps (.28 factor).
+ *
+ * iframe handling
+ * ───────────────
+ * Browsers give iframes their own cursor context — we cannot move our
+ * custom cursor inside a cross-origin iframe.  Instead, when the pointer
+ * enters an iframe we hide both cursor elements (the native iframe cursor
+ * takes over naturally).  On mouseleave of the iframe we re-show them.
  */
 export function useCursor() {
   const dotRef  = useRef(null)
   const ringRef = useRef(null)
   const pos     = useRef({ mx: 0, my: 0, rx: 0, ry: 0 })
-  const enabled = useRef(false)
+  const hidden  = useRef(false)
 
   useEffect(() => {
-    // Detect touch device — disable custom cursor entirely
     const isTouch = window.matchMedia('(hover: none)').matches ||
                     ('ontouchstart' in window) ||
                     navigator.maxTouchPoints > 0
-
     if (isTouch) {
       document.body.classList.add('touch-device')
-      return // skip all cursor logic
+      return
     }
 
-    enabled.current = true
     const dot  = dotRef.current
     const ring = ringRef.current
     if (!dot || !ring) return
 
+    // ── Helpers ──────────────────────────────────────────────
+    const setCursorVisible = (v) => {
+      hidden.current = !v
+      const op = v ? '' : '0'
+      dot.style.opacity  = op
+      ring.style.opacity = op
+    }
+
+    // ── Mouse position ────────────────────────────────────────
     const onMove = (e) => {
       pos.current.mx = e.clientX
       pos.current.my = e.clientY
-      dot.style.left = e.clientX + 'px'
-      dot.style.top  = e.clientY + 'px'
+      if (!hidden.current) {
+        dot.style.left = e.clientX + 'px'
+        dot.style.top  = e.clientY + 'px'
+      }
     }
 
+    // ── Lerp loop ─────────────────────────────────────────────
     let rafId
     const animate = () => {
       const p = pos.current
@@ -45,24 +59,44 @@ export function useCursor() {
     }
     animate()
 
+    // ── Grow/shrink on interactive elements ──────────────────
     const grow   = () => ring.classList.add('big')
     const shrink = () => ring.classList.remove('big')
-
-    // Delegate hover to document (works even after DOM changes)
     const handleEnter = (e) => {
       if (e.target.closest('a, button, .wc, .wc-see-all, .ap-card, .credit-card')) grow()
     }
     const handleLeave = (e) => {
       if (e.target.closest('a, button, .wc, .wc-see-all, .ap-card, .credit-card')) shrink()
     }
-    document.addEventListener('mouseover',  handleEnter)
-    document.addEventListener('mouseout',   handleLeave)
+
+    // ── iframe handling ───────────────────────────────────────
+    // We can't track the mouse inside an iframe; hide custom cursor there.
+    const onIframeEnter = () => setCursorVisible(false)
+    const onIframeLeave = () => {
+      setCursorVisible(true)
+      // Resync dot to last known position immediately
+      dot.style.left = pos.current.mx + 'px'
+      dot.style.top  = pos.current.my + 'px'
+    }
+
+    // Delegate iframe detection to document (works for dynamically added iframes)
+    const onMouseOver = (e) => {
+      handleEnter(e)
+      if (e.target.tagName === 'IFRAME') onIframeEnter()
+    }
+    const onMouseOut = (e) => {
+      handleLeave(e)
+      if (e.target.tagName === 'IFRAME') onIframeLeave()
+    }
+
     document.addEventListener('mousemove',  onMove)
+    document.addEventListener('mouseover',  onMouseOver)
+    document.addEventListener('mouseout',   onMouseOut)
 
     return () => {
       document.removeEventListener('mousemove', onMove)
-      document.removeEventListener('mouseover', handleEnter)
-      document.removeEventListener('mouseout',  handleLeave)
+      document.removeEventListener('mouseover', onMouseOver)
+      document.removeEventListener('mouseout',  onMouseOut)
       cancelAnimationFrame(rafId)
     }
   }, [])

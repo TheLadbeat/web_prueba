@@ -5,26 +5,21 @@ import { artPalettes, accentColors }  from '../../data/palettes'
 /**
  * Work section — featured project grid with cinematic background.
  *
- * Background system
- * ─────────────────
- * • 15 gradient layers (.wbg-N) are always in the DOM; only the active
- *   one has opacity:1, so CSS transitions handle the crossfade for free.
- * • For projects with images.wide we use TWO image layers (A / B).
- *   When a new image is needed we paint it onto the *inactive* layer,
- *   then swap which one is visible.  This gives a clean crossfade
- *   between two different background-image URLs — something CSS alone
- *   cannot do on a single element.
- * • On mouse-leave we wait 600ms before fading back to default, so the
- *   transition feels smooth rather than snapping to black.
+ * Image double-buffer
+ * ──────────────────
+ * Both image layers (slots 0 and 1) are ALWAYS in the DOM so CSS
+ * transitions fire reliably.  We alternate which slot is "active":
+ *   • Write new src to the inactive slot.
+ *   • On the next two rAFs (ensuring a paint between) swap active/inactive.
+ * This gives a clean opacity crossfade between two different background-image
+ * URLs, which CSS cannot do on a single element.
  */
 
 function ProjectCard({ project, onHover, onLeave, onClick }) {
   const acc    = accentColors[project.color]
   const hasImg = Boolean(project.images?.square)
-
   return (
-    <div
-      className="wc"
+    <div className="wc"
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       onClick={() => onClick(project)}
@@ -34,13 +29,8 @@ function ProjectCard({ project, onHover, onLeave, onClick }) {
         style={hasImg ? undefined : { background: artPalettes[project.color] }}
       >
         {hasImg ? (
-          <img
-            className="wc-art-img"
-            src={project.images.square}
-            alt={project.title}
-            loading="lazy"
-            draggable="false"
-          />
+          <img className="wc-art-img" src={project.images.square}
+            alt={project.title} loading="lazy" draggable="false" />
         ) : (
           <div style={{
             position: 'absolute', inset: 0,
@@ -48,13 +38,11 @@ function ProjectCard({ project, onHover, onLeave, onClick }) {
           }} />
         )}
       </div>
-
       <div className="wc-poster-content">
         <span className="wc-format-badge">{project.format}</span>
         <div className="wc-poster-title">{project.title}</div>
       </div>
       <span className="wc-year-badge">{project.year}</span>
-
       <div className="wc-overlay">
         <div className="wc-overlay-inner">
           <p  className="wc-ov-cat"  >{project.cat}</p>
@@ -69,105 +57,97 @@ function ProjectCard({ project, onHover, onLeave, onClick }) {
 const BG_INDICES = Array.from({ length: 15 }, (_, i) => i)
 
 export default function Work({ onOpenModal, onShowProjects }) {
-  // ── Gradient bg state
-  const [activeBg, setActiveBg] = useState(null) // color index | null
+  const [activeBg,  setActiveBg]  = useState(null)
 
-  // ── Double-buffered image bg state
-  // imgSlots: [{src, active}, {src, active}] — we alternate between slot 0 and 1
-  const [imgSlots, setImgSlots] = useState([
+  // Double-buffer: each slot = { src: string|null, active: bool }
+  // Both divs stay in the DOM at all times — only src/class change.
+  const [slots, setSlots] = useState([
     { src: null, active: false },
     { src: null, active: false },
   ])
-  const currentSlot = useRef(0) // which slot is currently showing
-
+  const current    = useRef(0)   // index of the currently visible slot
   const leaveTimer = useRef(null)
 
   const handleHover = useCallback((project) => {
     clearTimeout(leaveTimer.current)
-
-    const wide = project.images?.wide || null
     setActiveBg(project.color)
 
+    const wide = project.images?.wide ?? null
+
     if (wide) {
-      // Pick the *other* slot for the new image, paint it, activate it
-      const next = currentSlot.current === 0 ? 1 : 0
-      setImgSlots(prev => {
-        const slots = [...prev]
-        // Load new image into next slot (still invisible)
-        slots[next] = { src: wide, active: false }
-        return slots
+      const next = current.current === 0 ? 1 : 0
+      const prev = current.current
+
+      // Step 1 — load src into next slot (still invisible)
+      setSlots(s => {
+        const n = [...s]
+        n[next] = { src: wide, active: false }
+        return n
       })
-      // On next tick, activate new slot and deactivate old
+
+      // Step 2 — after two rAFs (guarantees a repaint) make it visible
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          setImgSlots(prev => {
-            const slots = [...prev]
-            slots[next]            = { ...slots[next],            active: true  }
-            slots[currentSlot.current] = { ...slots[currentSlot.current], active: false }
-            return slots
+          setSlots(s => {
+            const n = [...s]
+            n[next] = { src: wide,      active: true  }
+            n[prev] = { src: n[prev].src, active: false }
+            return n
           })
-          currentSlot.current = next
+          current.current = next
         })
       })
     } else {
-      // No image — deactivate both image slots
-      setImgSlots([{ src: null, active: false }, { src: null, active: false }])
+      // No image — deactivate both but keep srcs so the fade-out is smooth
+      setSlots(s => s.map(slot => ({ ...slot, active: false })))
     }
   }, [])
 
   const handleLeave = useCallback(() => {
     leaveTimer.current = setTimeout(() => {
       setActiveBg(null)
-      setImgSlots([{ src: null, active: false }, { src: null, active: false }])
+      setSlots(s => s.map(slot => ({ ...slot, active: false })))
     }, 600)
   }, [])
 
+  const anyImgActive = slots.some(s => s.active)
+
   return (
     <section id="work">
-      {/* ── Cinematic background stage ── */}
       <div id="work-bg-stage">
-        {/* Default dark bg */}
         <div className={`wbg wbg-default${activeBg === null ? ' active' : ''}`} />
 
-        {/* Gradient layers */}
         {BG_INDICES.map(i => (
-          <div
-            key={i}
-            className={`wbg wbg-${i}${activeBg === i && !imgSlots.some(s => s.active) ? ' active' : ''}`}
+          <div key={i}
+            className={`wbg wbg-${i}${activeBg === i && !anyImgActive ? ' active' : ''}`}
           />
         ))}
 
-        {/* Image layers — double buffered */}
-        {imgSlots.map((slot, i) => (
-          slot.src ? (
-            <div
-              key={i}
-              className={`wbg-img${slot.active ? ' active' : ''}`}
-              style={{ backgroundImage: `url(${slot.src})` }}
-              aria-hidden="true"
-            />
-          ) : null
+        {/* Always-mounted image slots — never null so transitions fire */}
+        {slots.map((slot, i) => (
+          <div
+            key={i}
+            className={`wbg-img${slot.active ? ' active' : ''}`}
+            style={slot.src ? { backgroundImage: `url(${slot.src})` } : undefined}
+            aria-hidden="true"
+          />
         ))}
       </div>
 
       <div className="s-header reveal">
         <span className="s-num">01</span>
         <h2 className="s-title">Work</h2>
-        <span className="s-sub">Film &middot; TV &middot; Commercials &middot; Music Video &middot; Exhibitions</span>
+        <span className="s-sub">Film · TV · Commercials · Music Video · Exhibitions</span>
       </div>
 
       <div className="work-grid">
         {featuredProjects.map(p => (
-          <ProjectCard
-            key={p.id}
-            project={p}
+          <ProjectCard key={p.id} project={p}
             onHover={() => handleHover(p)}
             onLeave={handleLeave}
             onClick={onOpenModal}
           />
         ))}
-
-        {/* See All card */}
         <div className="wc-see-all" onClick={onShowProjects}>
           <div className="wc-see-all-inner">
             <div className="wc-see-all-label">SEE<br />ALL</div>
