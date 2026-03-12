@@ -77,7 +77,7 @@ export const projects = [
     featured: true,
     order:   2,
     images: {
-      square:  null,
+      square:  "/images/leave_the_world_behind/square.webp",
       wide:    null,
       poster:  null,
     },
