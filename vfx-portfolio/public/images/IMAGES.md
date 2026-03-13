@@ -13,9 +13,9 @@ Drop your image files here. Then set the paths in src/data/projects.js.
 ## Example (in projects.js)
 
     images: {
-      square: "/images/society-of-the-snow-square.jpg",
-      wide:   "/images/society-of-the-snow-wide.jpg",
-      poster: "/images/society-of-the-snow-poster.jpg",
+      square: "/images/projects/society-of-the-snow-square.jpg",
+      wide:   "/images/projects/society-of-the-snow-wide.jpg",
+      poster: "/images/projects/society-of-the-snow-poster.jpg",
     }
 
 Any field set to null falls back to the CSS gradient (color field).
