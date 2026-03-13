@@ -14,6 +14,10 @@ export default function Hero({ onShowProjects }) {
       <div className="hero-content">
         <div className="hero-left">
           <p className="hero-eyebrow">VFX Digital Compositor · Nuke · Film &amp; TV</p>
+          <div className="hero-avail">
+            <span className="hero-avail-dot" />
+            Madrid · Open to relocation
+          </div>
           <h1 className="hero-name">
             MARCOS<br /><em>MUÑOZ</em>
           </h1>

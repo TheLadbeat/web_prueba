@@ -10,6 +10,9 @@ export default function Contact() {
           Looking for a VFX compositor with real production credits, Nuke fluency,
           and a solid grasp of modern AI tools? Let&apos;s talk.
         </p>
+        <p className="contact-location reveal">
+          <span className="contact-loc-dot" />Based in Madrid &nbsp;·&nbsp; Open to relocation worldwide
+        </p>
         <a
           href="mailto:marcos.mu.reyes@gmail.com"
           className="contact-email reveal"
