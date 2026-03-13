@@ -78,8 +78,8 @@ export const projects = [
     order:   2,
     images: {
       square:  "/images/leave_the_world_behind/square.webp",
-      wide:    null,
-      poster:  null,
+      wide:    "/images/leave_the_world_behind/wide.webp",
+      poster:  "/images/leave_the_world_behind/poster.webp",
     },
   },
 
@@ -99,9 +99,9 @@ export const projects = [
     featured: true,
     order:   3,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/lionel/square.webp",
+      wide:    "/images/lionel/wide.webp",
+      poster:  "/images/lionel/poster.webp",
     },
   },
 
@@ -123,9 +123,9 @@ export const projects = [
     featured: true,
     order:   4,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/la_coleccionista/square.webp",
+      wide:    "/images/la_coleccionista/wide.webp",
+      poster:  "/images/la_coleccionista/poster.webp",
     },
   },
 
@@ -145,9 +145,9 @@ export const projects = [
     featured: true,
     order:   5,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/la_ruta/square.webp",
+      wide:    "/images/la_ruta/wide.webp",
+      poster:  "/images/la_ruta/poster.webp",
     },
   },
 
@@ -167,16 +167,16 @@ export const projects = [
     featured: true,
     order:   6,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/nails/square.webp",
+      wide:    "/images/nails/wide.webp",
+      poster:  "/images/nails/poster.webp",
     },
   },
 
   {
     id:      'esa-noche',
     cat:     'TV Series',
-    title:   'Esa Noche',
+    title:   'That Night',
     sub:     '2026',
     desc:    'Current production. VFX compositing work including set extensions, atmospheric effects, and shot cleanup. Using established LaLivingston pipeline for delivery and supervisor review.',
     studio:  'LaLivingston',
@@ -189,9 +189,9 @@ export const projects = [
     featured: true,
     order:   7,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/esa_noche/square.webp",
+      wide:    "/images/esa_noche/wide.webp",
+      poster:  "/images/esa_noche/poster.webp",
     },
   },
 
