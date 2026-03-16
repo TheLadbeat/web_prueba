@@ -55,9 +55,9 @@ export const projects = [
     featured: true,
     order:   1,           // ← 1st slot on the main grid
     images: {
-      square:  "/images/projects/society_of_the_snow/square.webp",      // e.g. '/images/society-square.jpg'
-      wide:    "/images/projects/society_of_the_snow/wide.webp",
-      poster:  "/images/projects/society_of_the_snow/poster.webp",
+      square:  "/images/projects/2023/society_of_the_snow/square.webp",      // e.g. '/images/society-square.jpg'
+      wide:    "/images/projects/2023/society_of_the_snow/wide.webp",
+      poster:  "/images/projects/2023/society_of_the_snow/poster.webp",
     },
   },
 
@@ -77,9 +77,9 @@ export const projects = [
     featured: true,
     order:   2,
     images: {
-      square:  "/images/projects/leave_the_world_behind/square.webp",
-      wide:    "/images/projects/leave_the_world_behind/wide.webp",
-      poster:  "/images/projects/leave_the_world_behind/poster.webp",
+      square:  "/images/projects/2023/leave_the_world_behind/square.webp",
+      wide:    "/images/projects/2023/leave_the_world_behind/wide.webp",
+      poster:  "/images/projects/2023/leave_the_world_behind/poster.webp",
     },
   },
 
@@ -99,9 +99,9 @@ export const projects = [
     featured: true,
     order:   3,
     images: {
-      square:  "/images/projects/lionel/square.webp",
-      wide:    "/images/projects/lionel/wide.webp",
-      poster:  "/images/projects/lionel/poster.webp",
+      square:  "/images/projects/2025/lionel/square.webp",
+      wide:    "/images/projects/2025/lionel/wide.webp",
+      poster:  "/images/projects/2025/lionel/poster.webp",
     },
   },
 
@@ -123,9 +123,9 @@ export const projects = [
     featured: true,
     order:   4,
     images: {
-      square:  "/images/projects/la_coleccionista/square.webp",
-      wide:    "/images/projects/la_coleccionista/wide.webp",
-      poster:  "/images/projects/la_coleccionista/poster.webp",
+      square:  "/images/projects/2025/la_coleccionista/square.webp",
+      wide:    "/images/projects/2025/la_coleccionista/wide.webp",
+      poster:  "/images/projects/2025/la_coleccionista/poster.webp",
     },
   },
 
@@ -145,9 +145,9 @@ export const projects = [
     featured: true,
     order:   5,
     images: {
-      square:  "/images/projects/la_ruta/square.webp",
-      wide:    "/images/projects/la_ruta/wide.webp",
-      poster:  "/images/projects/la_ruta/poster.webp",
+      square:  "/images/projects/2025/la_ruta/square.webp",
+      wide:    "/images/projects/2025/la_ruta/wide.webp",
+      poster:  "/images/projects/2025/la_ruta/poster.webp",
     },
   },
 
@@ -167,9 +167,9 @@ export const projects = [
     featured: true,
     order:   6,
     images: {
-      square:  "/images/projects/nails/square.webp",
-      wide:    "/images/projects/nails/wide.webp",
-      poster:  "/images/projects/nails/poster.webp",
+      square:  "/images/projects/2025/nails/square.webp",
+      wide:    "/images/projects/2025/nails/wide.webp",
+      poster:  "/images/projects/2025/nails/poster.webp",
     },
   },
 
@@ -189,9 +189,9 @@ export const projects = [
     featured: true,
     order:   7,
     images: {
-      square:  "/images/projects/esa_noche/square.webp",
-      wide:    "/images/projects/esa_noche/wide.webp",
-      poster:  "/images/projects/esa_noche/poster.webp",
+      square:  "/images/projects/2026/esa_noche/square.webp",
+      wide:    "/images/projects/2026/esa_noche/wide.webp",
+      poster:  "/images/projects/2026/esa_noche/poster.webp",
     },
   },
 
@@ -305,8 +305,8 @@ export const projects = [
     featured: false,
     order:   null,
     images: {
-      square:  null,
-      wide:    null,
+      square:  "/images/projects/2025/atrapados/square.webp",
+      wide:    "/images/projects/2025/atrapados/wide.webp",
       poster:  null,
     },
   },
