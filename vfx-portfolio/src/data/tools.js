@@ -16,7 +16,7 @@ export const tools = [
 
   // ── Row 2 ────────────────────────────────────────────────
   
-  { id: 'blender',   name: 'Blender',     icon: '/images/tools/blender.svg',   row: 2 },
+  { id: 'blender',   name: 'Blender',     icon: '/images/tools/blender.png',   row: 2 },
   { id: 'maya',      name: 'Maya',        icon: '/images/tools/maya.svg',      row: 2 },
   { id: 'ftrack',    name: 'ftrack',      icon: '/images/tools/ftrack.svg',    row: 2 },
   { id: 'photoshop', name: 'Photoshop',   icon: '/images/tools/photoshop.svg', row: 2 },
