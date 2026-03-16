@@ -16,9 +16,9 @@ export const tools = [
 
   // ── Row 2 ────────────────────────────────────────────────
   
-  { id: 'blender',   name: 'Blender',     icon: '/images/tools/blender.svg',   row: 1 },
-  { id: 'maya',      name: 'Maya',        icon: '/images/tools/maya.svg',      row: 1 },
-  { id: 'ftrack',    name: 'ftrack',      icon: '/images/tools/ftrack.svg',    row: 1 },
-  { id: 'photoshop', name: 'Photoshop',   icon: '/images/tools/photoshop.svg', row: 1 },
-  { id: 'premiere',  name: 'Premiere Pro',icon: '/images/tools/premiere.svg',  row: 1 },
+  { id: 'blender',   name: 'Blender',     icon: '/images/tools/blender.svg',   row: 2 },
+  { id: 'maya',      name: 'Maya',        icon: '/images/tools/maya.svg',      row: 2 },
+  { id: 'ftrack',    name: 'ftrack',      icon: '/images/tools/ftrack.svg',    row: 2 },
+  { id: 'photoshop', name: 'Photoshop',   icon: '/images/tools/photoshop.svg', row: 2 },
+  { id: 'premiere',  name: 'Premiere Pro',icon: '/images/tools/premiere.svg',  row: 2 },
 ]
