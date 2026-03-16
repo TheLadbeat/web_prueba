@@ -306,8 +306,8 @@ export const projects = [
     order:   null,
     images: {
       square:  "/images/projects/2025/atrapados/square.webp",
-      wide:    "/images/projects/2025/atrapados/wide.webp",
-      poster:  null,
+      wide:    null,
+      poster:  "/images/projects/2025/atrapados/poster.webp",
     },
   },
 
