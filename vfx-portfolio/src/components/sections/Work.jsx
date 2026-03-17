@@ -48,8 +48,8 @@ function ProjectCard({ project, isActive, onHover, onLeave, onClick }) {
       <span className="wc-year-badge">{project.year}</span>
       <div className="wc-overlay">
         <div className="wc-overlay-inner">
-          <h3 className="wc-ov-title">{project.title}</h3>
           <p  className="wc-ov-cat"  >{project.cat}</p>
+          <h3 className="wc-ov-title">{project.title}</h3>
         </div>
       </div>
     </div>

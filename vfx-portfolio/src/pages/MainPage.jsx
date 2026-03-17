@@ -17,12 +17,12 @@ export default function MainPage({ onOpenModal, onShowProjects }) {
       <Work    onOpenModal={onOpenModal} onShowProjects={onShowProjects} />
 
       {/* Ticker strip 1 — before Reel, scrolls left, seed 1 */}
-      <CreditsTicker direction="left"  seed={1} speed={44} />
+      <CreditsTicker direction="left"  seed={1} speed={100} />
 
       <Reel />
 
       {/* Ticker strip 2 — after Reel, scrolls right, seed 7 (different shuffle) */}
-      <CreditsTicker direction="right" seed={7} speed={38} />
+      <CreditsTicker direction="right" seed={7} speed={100} />
 
       <Tools />
       <Stats />
