@@ -1,18 +1,7 @@
 import { useMemo } from 'react'
 import { projects } from '../../data/projects'
 
-/**
- * Single infinite ticker strip.
- *
- * Props:
- *   direction  'left' | 'right'  — scroll direction
- *   seed       number            — used to produce a deterministic shuffle
- *                                  so the two strips look different
- *   speed      number            — animation duration in seconds (default 40)
- */
-
 function shuffle(arr, seed) {
-  // Seeded Fisher-Yates so each strip gets a different but stable order
   const a = [...arr]
   let s = seed
   for (let i = a.length - 1; i > 0; i--) {
@@ -23,15 +12,28 @@ function shuffle(arr, seed) {
   return a
 }
 
+/**
+ * Seamless infinite ticker.
+ *
+ * The trick for a perfect loop:
+ *  - Render items × 2 (doubled array).
+ *  - For LEFT scroll:  animate 0 → -50%  (width of one copy). At loop reset
+ *    position is 0 again — looks identical → seamless.
+ *  - For RIGHT scroll: animate -50% → 0. At loop reset position is -50%
+ *    again — seamless.
+ *  - We use two SEPARATE @keyframes (ctScrollLeft / ctScrollRight) so there
+ *    is no `animation-direction: reverse` which causes a visible jump on
+ *    every loop reset.
+ */
 export default function CreditsTicker({ direction = 'left', seed = 1, speed = 42 }) {
-  const items = useMemo(() => shuffle(projects, seed), [seed])
-
-  // Duplicate for seamless loop
+  const items   = useMemo(() => shuffle(projects, seed), [seed])
   const doubled = [...items, ...items]
 
   const animStyle = {
+    animationName:     direction === 'right' ? 'ctScrollRight' : 'ctScrollLeft',
     animationDuration: `${speed}s`,
-    animationDirection: direction === 'right' ? 'reverse' : 'normal',
+    animationTimingFunction: 'linear',
+    animationIterationCount: 'infinite',
   }
 
   return (

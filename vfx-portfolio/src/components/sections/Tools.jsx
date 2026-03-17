@@ -29,7 +29,7 @@ export default function Tools() {
   return (
     <section id="tools">
       <div className="tools-inner reveal">
-        <div className="tools-row">
+        <div className="tools-row tools-row-primary">
           {row1.map(t => <ToolItem key={t.id} tool={t} />)}
         </div>
         <div className="tools-row">

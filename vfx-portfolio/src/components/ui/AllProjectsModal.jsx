@@ -39,13 +39,17 @@ function ProjectCard({ project, onClick }) {
           }} />
         )}
       </div>
+      {/* Permanent bottom vignette */}
+      <div className="ap-card-vignette" />
       <span className="ap-card-format">{project.format}</span>
       <span className="ap-card-year-badge">{project.year}</span>
+      {/* Always-visible title */}
+      <div className="ap-card-title-always">{project.title}</div>
+      {/* Hover overlay */}
       <div className="ap-card-overlay">
         <div className="ap-card-info">
           <p className="ap-card-cat">{project.cat}</p>
           <h3 className="ap-card-title">{project.title}</h3>
-          <p className="ap-card-role">{project.studio}</p>
         </div>
       </div>
     </div>
