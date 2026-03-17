@@ -5,15 +5,16 @@ import { artPalettes, accentColors }  from '../../data/palettes'
 /**
  * Work — cinematic background + transparency cards.
  *
- * Rapid-hover fix
- * ───────────────
- * The race condition when moving fast: rAF callbacks scheduled for a previous
- * hover fire AFTER the next hover's state updates, overwriting `current.current`
- * and activating the wrong slot.
+ * Background image architecture
+ * ─────────────────────────────
+ * Instead of a double-buffer with two shared slots, we mount ONE layer per
+ * project that has a wide image, all permanently in the DOM.
  *
- * Fix: each handleHover call gets a monotonic `generation` counter. The rAF
- * callback checks that its generation is still the latest before committing.
- * Stale callbacks (from fast moves) are silently dropped.
+ * On hover we set that project's layer to opacity:1 and all others to
+ * opacity:0.  Because each layer is an independent DOM element, CSS can
+ * transition correctly from ANY mid-transition value — no jump, no stale
+ * rAF callback problem.  Moving fast just starts a new transition from
+ * wherever the opacity currently is.
  */
 
 function ProjectCard({ project, isActive, onHover, onLeave, onClick }) {
@@ -47,91 +48,60 @@ function ProjectCard({ project, isActive, onHover, onLeave, onClick }) {
       <span className="wc-year-badge">{project.year}</span>
       <div className="wc-overlay">
         <div className="wc-overlay-inner">
-          <p  className="wc-ov-cat"  >{project.cat}</p>
           <h3 className="wc-ov-title">{project.title}</h3>
+          <p  className="wc-ov-cat"  >{project.cat}</p>
         </div>
       </div>
     </div>
   )
 }
 
-const BG_INDICES = Array.from({ length: 15 }, (_, i) => i)
+// Projects that have a wide image — each gets a permanent bg layer
+const IMG_PROJECTS = featuredProjects.filter(p => p.images?.wide)
+const BG_INDICES   = Array.from({ length: 15 }, (_, i) => i)
 
 export default function Work({ onOpenModal, onShowProjects }) {
-  const [activeBg,    setActiveBg]    = useState(null)
-  const [activeCard,  setActiveCard]  = useState(null)  // project id
-  const [slots, setSlots] = useState([
-    { src: null, active: false },
-    { src: null, active: false },
-  ])
-
-  const current    = useRef(0)
-  const generation = useRef(0)   // monotonic counter — stale rAF callbacks are dropped
+  const [activeBg,   setActiveBg]   = useState(null)   // color index | null
+  const [activeImg,  setActiveImg]  = useState(null)   // project id | null
+  const [activeCard, setActiveCard] = useState(null)   // project id | null
   const leaveTimer = useRef(null)
 
   const handleHover = useCallback((project) => {
     clearTimeout(leaveTimer.current)
     setActiveBg(project.color)
     setActiveCard(project.id)
-
-    const wide = project.images?.wide ?? null
-    const gen  = ++generation.current   // claim this generation
-
-    if (wide) {
-      const next = current.current === 0 ? 1 : 0
-      const prev = current.current
-
-      // Write new src into inactive slot (invisible, no flash)
-      setSlots(s => {
-        const n = [...s]
-        n[next] = { src: wide, active: false }
-        return n
-      })
-
-      // After two rAFs (guarantees browser painted the new backgroundImage)
-      // activate next, deactivate prev — but ONLY if still the latest hover
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          if (gen !== generation.current) return   // stale — a newer hover won
-          setSlots(s => {
-            const n = [...s]
-            n[next] = { src: wide,        active: true  }
-            n[prev] = { src: n[prev].src, active: false }
-            return n
-          })
-          current.current = next
-        })
-      })
-    } else {
-      // No wide image — fade out both image slots
-      setSlots(s => s.map(slot => ({ ...slot, active: false })))
-    }
+    setActiveImg(project.images?.wide ? project.id : null)
   }, [])
 
   const handleLeave = useCallback(() => {
     leaveTimer.current = setTimeout(() => {
       setActiveBg(null)
       setActiveCard(null)
-      setSlots(s => s.map(slot => ({ ...slot, active: false })))
+      setActiveImg(null)
     }, 80)
   }, [])
-
-  const anyImgActive = slots.some(s => s.active)
 
   return (
     <section id="work">
       <div id="work-bg-stage">
+        {/* Default dark bg */}
         <div className={`wbg wbg-default${activeBg === null ? ' active' : ''}`} />
+
+        {/* Gradient layers — shown when no image active */}
         {BG_INDICES.map(i => (
           <div key={i}
-            className={`wbg wbg-${i}${activeBg === i && !anyImgActive ? ' active' : ''}`}
+            className={`wbg wbg-${i}${activeBg === i && !activeImg ? ' active' : ''}`}
           />
         ))}
-        {slots.map((slot, i) => (
+
+        {/* One permanent image layer per project with a wide image.
+            CSS opacity transitions always work correctly because each
+            layer is independent — no jump when moving fast. */}
+        {IMG_PROJECTS.map(p => (
           <div
-            key={i}
-            className={`wbg-img${slot.active ? ' active' : ''}`}
-            style={slot.src ? { backgroundImage: `url(${slot.src})` } : undefined}
+            key={p.id}
+            className={`wbg-img${activeImg === p.id ? ' active' : ''}`}
+            style={{ backgroundImage: `url(${p.images.wide})` }}
             aria-hidden="true"
           />
         ))}
