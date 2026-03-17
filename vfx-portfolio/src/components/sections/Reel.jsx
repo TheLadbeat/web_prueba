@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const YOUTUBE_VIDEO_ID = 'YOUTUBE_VIDEO_ID'
+const YOUTUBE_VIDEO_ID = '2n5tyYBc9Og'
 const THUMB_URL = `https://i.ytimg.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`
 const EMBED_URL =
   `https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}` +
