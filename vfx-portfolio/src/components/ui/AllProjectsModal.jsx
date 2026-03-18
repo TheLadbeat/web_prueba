@@ -1,25 +1,26 @@
-import { useMemo, useEffect, useRef } from 'react'
-import { projects }            from '../../data/projects'
-import { artPalettes, accentColors } from '../../data/palettes'
-import { lockScroll, unlockScroll }  from '../../utils/scrollLock'
+import { useState, useMemo, useEffect, useRef } from 'react'
+import { projects }                    from '../../data/projects'
+import { artPalettes, accentColors }   from '../../data/palettes'
+import { lockScroll, unlockScroll }    from '../../utils/scrollLock'
 
 /**
- * All-projects modal — full-viewport overlay, slides up over main page.
+ * All-projects modal — full-viewport overlay.
  *
- * z-index 7500  (below the project-detail modal at 8200)
- *
- * Scroll behaviour
- *   - Main-page scroll is locked via shared scrollLock utility (ref-counted).
- *   - When a project-detail modal opens on top, it adds another lock so
- *     the page stays frozen even after this modal's own lock releases.
- *   - .apm-body scrolls independently; overscroll-behavior:contain stops bleed.
+ * Features:
+ *  - Format filter bar (All + one button per unique format).
+ *  - Within each year, projects sorted by month descending (nulls last).
+ *  - Filtered-out cards fade + scale down; filtered-in cards restore.
+ *  - Scroll lock (ref-counted, no double-unlock).
  */
 
-function ProjectCard({ project, onClick }) {
+function ProjectCard({ project, filteredOut, onClick }) {
   const acc    = accentColors[project.color]
   const hasImg = Boolean(project.images?.square)
   return (
-    <div className="ap-card" onClick={() => onClick(project)}>
+    <div
+      className={`ap-card${filteredOut ? ' filtered-out' : ''}`}
+      onClick={filteredOut ? undefined : () => onClick(project)}
+    >
       <div
         className={`ap-card-art${hasImg ? '' : ' gradient-only'}`}
         style={hasImg ? undefined : { background: artPalettes[project.color] }}
@@ -39,16 +40,13 @@ function ProjectCard({ project, onClick }) {
           }} />
         )}
       </div>
-      {/* Permanent bottom vignette */}
       <div className="ap-card-vignette" />
       <span className="ap-card-format">{project.format}</span>
       <span className="ap-card-year-badge">{project.year}</span>
-      {/* Always-visible title */}
       <div className="ap-card-title-always">{project.title}</div>
-      {/* Hover overlay */}
       <div className="ap-card-overlay">
         <div className="ap-card-info">
-          <p className="ap-card-cat">{project.cat}</p>
+          <p  className="ap-card-cat"  >{project.cat}</p>
           <h3 className="ap-card-title">{project.title}</h3>
         </div>
       </div>
@@ -56,18 +54,48 @@ function ProjectCard({ project, onClick }) {
   )
 }
 
-export default function AllProjectsModal({ open, onClose, onOpenProject }) {
-  const bodyRef = useRef(null)
+// Unique formats in display order (sorted by frequency desc, then alpha)
+const ALL_FORMATS = (() => {
+  const counts = {}
+  projects.forEach(p => { counts[p.format] = (counts[p.format] || 0) + 1 })
+  return Object.keys(counts).sort((a, b) => counts[b] - counts[a] || a.localeCompare(b))
+})()
 
-  // Lock main-page scroll while open
+// Group and sort by year desc, then month desc within year (nulls last)
+const BY_YEAR = (() => {
+  const map = {}
+  projects.forEach(p => {
+    if (!map[p.year]) map[p.year] = []
+    map[p.year].push(p)
+  })
+  return Object.keys(map)
+    .sort((a, b) => +b - +a)
+    .map(year => ({
+      year,
+      items: map[year].slice().sort((a, b) => {
+        if (a.month == null && b.month == null) return 0
+        if (a.month == null) return 1
+        if (b.month == null) return -1
+        return b.month - a.month
+      }),
+    }))
+})()
+
+export default function AllProjectsModal({ open, onClose, onOpenProject }) {
+  const bodyRef      = useRef(null)
+  const [filter, setFilter] = useState('All')
+
+  // Reset filter when modal opens
   useEffect(() => {
-    if (open) {
-      lockScroll()
-      if (bodyRef.current) bodyRef.current.scrollTop = 0
-    } else {
-      unlockScroll()
-    }
-    return () => { if (open) unlockScroll() }
+    if (open) setFilter('All')
+  }, [open])
+
+  // Scroll lock — cleanup-only pattern avoids double-unlock.
+  useEffect(() => {
+    if (!open) return
+    lockScroll()
+    if (bodyRef.current) bodyRef.current.scrollTop = 0
+    return () => unlockScroll()
   }, [open])
 
   // Escape key
@@ -78,21 +106,12 @@ export default function AllProjectsModal({ open, onClose, onOpenProject }) {
     return () => window.removeEventListener('keydown', h)
   }, [open, onClose])
 
-  // Group by year descending
-  const byYear = useMemo(() => {
-    const map = {}
-    projects.forEach(p => {
-      if (!map[p.year]) map[p.year] = []
-      map[p.year].push(p)
-    })
-    return Object.keys(map)
-      .sort((a, b) => +b - +a)
-      .map(year => ({ year, items: map[year] }))
-  }, [])
+  const visibleCount = useMemo(() =>
+    filter === 'All' ? projects.length : projects.filter(p => p.format === filter).length
+  , [filter])
 
   return (
     <div className={`apm${open ? ' open' : ''}`} role="dialog" aria-modal="true">
-      {/* Backdrop */}
       <div className="apm-backdrop" onClick={onClose} />
 
       <div className="apm-panel">
@@ -101,31 +120,60 @@ export default function AllProjectsModal({ open, onClose, onOpenProject }) {
           <div className="apm-header-left">
             <button className="apm-back" onClick={onClose}>&#8592; Back</button>
             <span className="apm-title">ALL WORK</span>
-            <span className="apm-count">{projects.length} projects · 2023–2026</span>
+            <span className="apm-count">
+              {visibleCount} {visibleCount === 1 ? 'project' : 'projects'}
+            </span>
           </div>
           <button className="apm-close" onClick={onClose} aria-label="Close">&#x2715;</button>
         </header>
 
-        {/* Scrollable body — overscroll-behavior:contain via CSS */}
+        {/* Filter bar */}
+        <div className="apm-filter-wrap">
+          <div className="apm-filter">
+            <button
+              className={`apm-filter-btn${filter === 'All' ? ' active' : ''}`}
+              onClick={() => setFilter('All')}
+            >
+              All
+            </button>
+            {ALL_FORMATS.map(fmt => (
+              <button
+                key={fmt}
+                className={`apm-filter-btn${filter === fmt ? ' active' : ''}`}
+                onClick={() => setFilter(fmt)}
+              >
+                {fmt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Scrollable body */}
         <div className="apm-body" ref={bodyRef}>
           <div className="ap-content">
-            {byYear.map(({ year, items }) => (
-              <div key={year}>
-                <div className="ap-year-divider">
-                  <div className="ap-year-num">{year}</div>
-                  <div className="ap-year-line" />
+            {BY_YEAR.map(({ year, items }) => {
+              // Check if this year has any visible projects
+              const hasVisible = filter === 'All' || items.some(p => p.format === filter)
+              if (!hasVisible) return null
+              return (
+                <div key={year}>
+                  <div className="ap-year-divider">
+                    <div className="ap-year-num">{year}</div>
+                    <div className="ap-year-line" />
+                  </div>
+                  <div className="ap-year-grid">
+                    {items.map(p => (
+                      <ProjectCard
+                        key={p.id}
+                        project={p}
+                        filteredOut={filter !== 'All' && p.format !== filter}
+                        onClick={onOpenProject}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="ap-year-grid">
-                  {items.map(p => (
-                    <ProjectCard
-                      key={p.id}
-                      project={p}
-                      onClick={onOpenProject}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>

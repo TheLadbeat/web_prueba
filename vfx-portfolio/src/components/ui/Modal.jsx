@@ -11,11 +11,13 @@ import { lockScroll, unlockScroll }    from '../../utils/scrollLock'
 export default function Modal({ project, onClose }) {
   const open = !!project
 
-  // Scroll lock
+  // Scroll lock — cleanup-only pattern avoids double-unlock.
+  // When open true→false: cleanup fires unlockScroll() once. Effect body does nothing.
+  // When open false→true: lockScroll() called, cleanup registered for eventual close.
   useEffect(() => {
-    if (open) lockScroll()
-    else unlockScroll()
-    return () => { if (open) unlockScroll() }
+    if (!open) return
+    lockScroll()
+    return () => unlockScroll()
   }, [open])
 
   // Escape key
