@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useRef } from 'react'
 import { artPalettes, accentColors }   from '../../data/palettes'
 import { lockScroll, unlockScroll }    from '../../utils/scrollLock'
 
@@ -10,6 +11,8 @@ import { lockScroll, unlockScroll }    from '../../utils/scrollLock'
  */
 export default function Modal({ project, onClose }) {
   const open = !!project
+  const panelRef = useRef(null)
+  const prevFocusRef = useRef(null)
 
   // Scroll lock — cleanup-only pattern avoids double-unlock.
   // When open true→false: cleanup fires unlockScroll() once. Effect body does nothing.
@@ -28,6 +31,31 @@ export default function Modal({ project, onClose }) {
     return () => window.removeEventListener('keydown', h)
   }, [open, onClose])
 
+  useEffect(() => {
+    if (!open) return
+    prevFocusRef.current = document.activeElement
+    const panel = panelRef.current
+    const closeBtn = panel?.querySelector('.modal-close')
+    closeBtn?.focus()
+    const onKeyDown = (e) => {
+      if (e.key !== 'Tab' || !panel) return
+      const nodes = [...panel.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')]
+      if (!nodes.length) return
+      const first = nodes[0]
+      const last = nodes[nodes.length - 1]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus()
+      }
+    }
+    panel?.addEventListener('keydown', onKeyDown)
+    return () => {
+      panel?.removeEventListener('keydown', onKeyDown)
+      prevFocusRef.current?.focus?.()
+    }
+  }, [open])
+
   const p = project
 
   return (
@@ -35,7 +63,7 @@ export default function Modal({ project, onClose }) {
       <div className="modal-backdrop" onClick={onClose} />
 
       {p && (
-        <div className="modal-box">
+        <div className="modal-box" ref={panelRef} tabIndex={-1}>
           {/* Left panel: text */}
           <div className="modal-left">
             <div className="modal-label">{p.cat}</div>

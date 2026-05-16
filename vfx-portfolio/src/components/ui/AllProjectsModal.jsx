@@ -83,6 +83,8 @@ const BY_YEAR = (() => {
 
 export default function AllProjectsModal({ open, onClose, onOpenProject }) {
   const bodyRef      = useRef(null)
+  const panelRef     = useRef(null)
+  const prevFocusRef = useRef(null)
   const [filter, setFilter] = useState('All')
 
   // Reset filter when modal opens
@@ -112,6 +114,35 @@ export default function AllProjectsModal({ open, onClose, onOpenProject }) {
     return () => window.removeEventListener('keydown', h)
   }, [open, onClose])
 
+  // Focus trap + focus restore
+  useEffect(() => {
+    if (!open) return
+    prevFocusRef.current = document.activeElement
+    const panel = panelRef.current
+    if (!panel) return
+    const focusables = panel.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')
+    focusables[0]?.focus()
+    const onKeyDown = (e) => {
+      if (e.key !== 'Tab') return
+      const nodes = [...panel.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')]
+      if (!nodes.length) return
+      const first = nodes[0]
+      const last = nodes[nodes.length - 1]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+    panel.addEventListener('keydown', onKeyDown)
+    return () => {
+      panel.removeEventListener('keydown', onKeyDown)
+      prevFocusRef.current?.focus?.()
+    }
+  }, [open])
+
   const visibleCount = useMemo(() =>
     filter === 'All' ? projects.length : projects.filter(p => p.format === filter).length
   , [filter])
@@ -120,7 +151,7 @@ export default function AllProjectsModal({ open, onClose, onOpenProject }) {
     <div className={`apm${open ? ' open' : ''}`} role="dialog" aria-modal="true">
       <div className="apm-backdrop" onClick={onClose} />
 
-      <div className="apm-panel">
+      <div className="apm-panel" ref={panelRef} tabIndex={-1}>
         {/* Sticky header */}
         <header className="apm-header">
           <div className="apm-header-left">
