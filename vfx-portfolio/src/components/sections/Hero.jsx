@@ -3,11 +3,23 @@ import { useHeroCanvas } from '../../hooks/useHeroCanvas'
 
 export default function Hero({ onShowProjects }) {
   const canvasRef = useRef(null)
+  const heroRef = useRef(null)
   useHeroCanvas(canvasRef)
 
+  const handleMove = (e) => {
+    const el = heroRef.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    const x = ((e.clientX - r.left) / r.width) * 100
+    const y = ((e.clientY - r.top) / r.height) * 100
+    el.style.setProperty('--hx', `${x}%`)
+    el.style.setProperty('--hy', `${y}%`)
+  }
+
   return (
-    <section id="hero">
+    <section id="hero" ref={heroRef} onMouseMove={handleMove}>
       <canvas id="hero-canvas" ref={canvasRef} />
+      <div className="hero-reactive-bloom" aria-hidden="true" />
       <div className="hero-scanlines" />
       <div className="hero-vignette" />
 

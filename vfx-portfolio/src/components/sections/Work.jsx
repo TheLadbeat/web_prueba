@@ -20,11 +20,24 @@ import { artPalettes, accentColors }  from '../../data/palettes'
 function ProjectCard({ project, isActive, onHover, onLeave, onClick }) {
   const acc    = accentColors[project.color]
   const hasImg = Boolean(project.images?.square)
+  const handleMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - r.left) / r.width - 0.5) * 2
+    const y = ((e.clientY - r.top) / r.height - 0.5) * 2
+    e.currentTarget.style.setProperty('--mx', `${x}`)
+    e.currentTarget.style.setProperty('--my', `${y}`)
+  }
+  const resetMove = (e) => {
+    e.currentTarget.style.setProperty('--mx', '0')
+    e.currentTarget.style.setProperty('--my', '0')
+    onLeave()
+  }
   return (
     <div
       className={`wc${isActive ? ' active' : ''}`}
       onMouseEnter={onHover}
-      onMouseLeave={onLeave}
+      onMouseMove={handleMove}
+      onMouseLeave={resetMove}
       onClick={() => onClick(project)}
     >
       <div
