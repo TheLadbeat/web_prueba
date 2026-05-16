@@ -158,21 +158,20 @@ export default function AllProjectsModal({ open, onClose, onOpenProject }) {
         <div className="apm-body" ref={bodyRef}>
           <div className="ap-content">
             {BY_YEAR.map(({ year, items }) => {
-              // Check if this year has any visible projects
-              const hasVisible = filter === 'All' || items.some(p => p.format === filter)
-              if (!hasVisible) return null
+              const visibleItems = items.filter(p => filter === 'All' || p.format === filter)
+              const hasVisible = visibleItems.length > 0
               return (
-                <div key={year}>
+                <div key={year} className={`ap-year-block${hasVisible ? ' has-visible' : ' is-empty'}`}>
                   <div className="ap-year-divider">
                     <div className="ap-year-num">{year}</div>
                     <div className="ap-year-line" />
                   </div>
                   <div className="ap-year-grid">
-                    {items.map(p => (
+                    {visibleItems.map(p => (
                       <ProjectCard
                         key={p.id}
                         project={p}
-                        filteredOut={filter !== 'All' && p.format !== filter}
+                        filteredOut={false}
                         onClick={onOpenProject}
                       />
                     ))}

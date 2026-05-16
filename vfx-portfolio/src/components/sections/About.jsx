@@ -1,37 +1,18 @@
 export default function About() {
   return (
     <section id="about" style={{ padding: 0 }}>
-      <div className="about-grid">
-        {/* ── Visual placeholder ── */}
-        <div className="about-visual reveal-left">
-          <div className="about-visual-art" />
-          <div className="about-placeholder">
-            <div className="about-placeholder-ring">
-              <span className="about-placeholder-initials">MM</span>
-            </div>
-            <span className="about-placeholder-label">Marcos Muñoz</span>
-          </div>
-          <div className="about-caption">
-            <div className="about-caption-line" />
-            <p className="about-caption-text">
-              "Two years in real production taught me more than any course ever could."
-            </p>
-          </div>
-        </div>
-
-        {/* ── Content ── */}
-        <div className="about-content reveal-right">
+      <div className="about-grid about-grid-single">
+        <div className="about-content reveal-fade">
           <p className="about-eyebrow">04 · About</p>
           <h2 className="about-heading">VFX Digital<br />Compositor</h2>
 
-          <p className="about-bio">
+          <p className="about-bio about-bio-extended">
             Based in Madrid. Two years compositing real shots — keying, roto &amp; prep,
             CG/FX integration and atmospherics — at El Ranchito VFX and LaLivingston.
             Credits include <em>Society of the Snow</em> and <em>Leave the World Behind</em>.
             Primary tool is Nuke. Exploring generative AI as part of the compositing workflow.
           </p>
 
-          {/* Experience timeline */}
           <div className="exp-timeline">
             <div className="exp-item">
               <div className="exp-dates">Jun 2025<br />Present</div>
@@ -59,15 +40,14 @@ export default function About() {
             </div>
           </div>
 
-          {/* Stack */}
           <div className="stack-block">
             <div className="stack-label">Stack</div>
             <div className="stack-categories">
               {[
                 { cat: 'Primary', tools: ['Nuke', 'Mocha Pro', 'ShotGrid', 'ftrack'] },
-                { cat: '3D / CG',  tools: ['Blender', 'Maya'] },
+                { cat: '3D / CG', tools: ['Blender', 'Maya'] },
                 { cat: 'AI · Code', tools: ['ComfyUI', 'Python', 'ControlNet'] },
-                { cat: 'Other',   tools: ['Photoshop', 'Premiere Pro'] },
+                { cat: 'Other', tools: ['Photoshop', 'Premiere Pro'] },
               ].map(row => (
                 <div key={row.cat} className="stack-row">
                   <span className="stack-cat">{row.cat}</span>
@@ -79,7 +59,6 @@ export default function About() {
             </div>
           </div>
 
-          {/* Education */}
           <div className="edu-block">
             <div className="stack-label">Education</div>
             {[

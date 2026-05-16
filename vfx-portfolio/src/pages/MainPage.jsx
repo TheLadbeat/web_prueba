@@ -4,8 +4,6 @@ import CreditsTicker from '../components/ui/CreditsTicker'
 import Reel          from '../components/sections/Reel'
 import Tools         from '../components/sections/Tools'
 import Stats         from '../components/sections/Stats'
-import Credits       from '../components/sections/Credits'
-import Process       from '../components/sections/Process'
 import About         from '../components/sections/About'
 import Contact       from '../components/sections/Contact'
 import Footer        from '../components/layout/Footer'
@@ -26,8 +24,6 @@ export default function MainPage({ onOpenModal, onShowProjects }) {
 
       <Tools />
       <Stats />
-      <Credits onOpenModal={onOpenModal} />
-      <Process />
       <About />
       <Contact />
       <Footer />
