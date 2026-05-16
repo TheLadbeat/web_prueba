@@ -98,6 +98,12 @@ export default function AllProjectsModal({ open, onClose, onOpenProject }) {
     return () => unlockScroll()
   }, [open])
 
+  // Reset modal internal scroll on close so each open starts at top.
+  useEffect(() => {
+    if (open) return
+    if (bodyRef.current) bodyRef.current.scrollTop = 0
+  }, [open])
+
   // Escape key
   useEffect(() => {
     if (!open) return

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Nav               from './components/layout/Nav'
 import Grain             from './components/ui/Grain'
 import ProgressBar       from './components/ui/ProgressBar'
@@ -15,16 +15,6 @@ export default function App() {
 
   // ── Reveal — re-run when either modal opens (new .reveal nodes appear)
   useReveal([allOpen, !!modalProject])
-
-  // ── Nav scroll effect
-  useEffect(() => {
-    const handler = () => {
-      const nav = document.querySelector('.nav')
-      if (nav) nav.classList.toggle('scrolled', window.scrollY > 60)
-    }
-    window.addEventListener('scroll', handler, { passive: true })
-    return () => window.removeEventListener('scroll', handler)
-  }, [])
 
   return (
     <>

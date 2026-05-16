@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { lockScroll, unlockScroll } from '../../utils/scrollLock'
 
 export default function Nav({ onShowProjects }) {
   const [scrolled,  setScrolled]  = useState(false)
@@ -10,10 +11,11 @@ export default function Nav({ onShowProjects }) {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  // Lock body scroll when mobile drawer is open
+  // Lock page scroll when mobile drawer is open (shared ref-counted lock)
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    if (!menuOpen) return
+    lockScroll()
+    return () => unlockScroll()
   }, [menuOpen])
 
   const close = () => setMenuOpen(false)

@@ -1,27 +1,28 @@
-const TICKER_CREDITS = [
-  { title: 'Society of the Snow',         role: 'VFX Junior Compositor' },
-  { title: 'Leave the World Behind',      role: 'VFX Junior Compositor' },
-  { title: 'Lionel',                      role: 'VFX Digital Compositor' },
-  { title: 'La Coleccionista',            role: 'VFX Digital Compositor' },
-  { title: 'La Ruta Vol. 2: Ibiza',       role: 'VFX Digital Compositor' },
-  { title: 'Nails',                       role: 'VFX Digital Compositor' },
-  { title: 'Problema Cabrón — Residente', role: 'VFX Junior Compositor' },
-  { title: 'El Corte Inglés Christmas',   role: 'VFX Junior Compositor' },
-]
-
-const GRID_CREDITS = [
-  { name: 'Society of the Snow',         meta: 'VFX Junior Compositor · El Ranchito VFX', year: '2023' },
-  { name: 'Leave the World Behind',      meta: 'VFX Junior Compositor · El Ranchito VFX', year: '2023' },
-  { name: 'Problema Cabrón (Residente)', meta: 'VFX Junior Compositor · El Ranchito VFX', year: '2023' },
-  { name: 'Lionel',                      meta: 'VFX Digital Compositor · LaLivingston',   year: '2025' },
-  { name: 'La Coleccionista',            meta: 'VFX Digital Compositor · LaLivingston',   year: '2025' },
-  { name: 'La Ruta Vol. 2: Ibiza',       meta: 'VFX Digital Compositor · LaLivingston',   year: '2025' },
-]
-
-// Duplicate ticker for seamless loop
-const TICKER_DOUBLED = [...TICKER_CREDITS, ...TICKER_CREDITS]
+import { useMemo } from 'react'
+import { projects } from '../../data/projects'
 
 export default function Credits() {
+  const tickerCredits = useMemo(() => (
+    projects
+      .filter(p => p.year === '2026' || p.year === '2025' || p.year === '2023')
+      .slice(0, 8)
+      .map(p => ({ title: p.title, role: p.role }))
+  ), [])
+
+  const gridCredits = useMemo(() => (
+    projects
+      .slice()
+      .sort((a, b) => (+b.year - +a.year) || ((b.month ?? -1) - (a.month ?? -1)))
+      .slice(0, 6)
+      .map(p => ({
+        name: p.title,
+        meta: `${p.role} · ${p.studio}`,
+        year: p.year,
+      }))
+  ), [])
+
+  const tickerDoubled = [...tickerCredits, ...tickerCredits]
+
   return (
     <div id="credits">
       <div className="credits-header">
@@ -32,11 +33,10 @@ export default function Credits() {
         </div>
       </div>
 
-      {/* Scrolling ticker */}
       <div className="credits-ticker-wrap">
         <div className="credits-ticker">
-          {TICKER_DOUBLED.map((c, i) => (
-            <span key={i} className="credit-item">
+          {tickerDoubled.map((c, i) => (
+            <span key={`${c.title}-${i}`} className="credit-item">
               <span className="credit-title">{c.title}</span>
               <span className="credit-role">{c.role}</span>
             </span>
@@ -44,9 +44,8 @@ export default function Credits() {
         </div>
       </div>
 
-      {/* Featured credits grid */}
       <div className="credits-grid">
-        {GRID_CREDITS.map((c, i) => (
+        {gridCredits.map((c, i) => (
           <div
             key={c.name}
             className={`credit-card reveal${i % 3 !== 0 ? ` reveal-delay-${i % 3}` : ''}`}

@@ -90,7 +90,7 @@ export const projects = [
     id:      'lionel',
     cat:     'Feature Film',
     title:   'Lionel',
-    sub:     '2025',
+    sub:     '2026',
     desc:    'Feature film VFX compositing at LaLivingston. CG-heavy shots with atmospheric effects — smoke, particles and volumetrics built in Blender and integrated into Nuke. Generative AI tools used to support specific plate requirements.',
     studio:  'LaLivingston',
     year:    '2026',
