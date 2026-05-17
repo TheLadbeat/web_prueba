@@ -80,6 +80,20 @@ export function useHeroCanvas(canvasRef) {
     }
     draw()
 
-    return () => { cancelAnimationFrame(rafId); ro.disconnect() }
+    // Pause animation when tab is not visible — saves CPU/battery
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(rafId)
+      } else {
+        rafId = requestAnimationFrame(draw)
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      ro.disconnect()
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
   }, [canvasRef])
 }

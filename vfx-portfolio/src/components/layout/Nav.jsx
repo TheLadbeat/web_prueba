@@ -1,3 +1,4 @@
+import { lockScroll, unlockScroll } from '../../utils/scrollLock'
 import { useState, useEffect } from 'react'
 
 export default function Nav({ onShowProjects }) {
@@ -10,10 +11,11 @@ export default function Nav({ onShowProjects }) {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  // Lock body scroll when mobile drawer is open
+  // Lock scroll when mobile drawer is open — uses shared ref-counted utility
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    if (!menuOpen) return
+    lockScroll()
+    return () => unlockScroll()
   }, [menuOpen])
 
   const close = () => setMenuOpen(false)
@@ -41,8 +43,6 @@ export default function Nav({ onShowProjects }) {
         {/* Desktop links */}
         <ul className="nav-links">
           <li><a href="#work"    onClick={handleWork}>Work</a></li>
-          <li><a href="#credits" onClick={smoothTo('credits')}>Credits</a></li>
-          <li><a href="#process" onClick={smoothTo('process')}>Process</a></li>
           <li><a href="#about"   onClick={smoothTo('about')}>About</a></li>
         </ul>
 
@@ -64,8 +64,6 @@ export default function Nav({ onShowProjects }) {
       <div className={`nav-drawer${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
         <ul>
           <li><a href="#work"    onClick={handleWork}>Work</a></li>
-          <li><a href="#credits" onClick={smoothTo('credits')}>Credits</a></li>
-          <li><a href="#process" onClick={smoothTo('process')}>Process</a></li>
           <li><a href="#about"   onClick={smoothTo('about')}>About</a></li>
         </ul>
         <a href="#contact" className="drawer-cta" onClick={smoothTo('contact')}>Get in touch</a>

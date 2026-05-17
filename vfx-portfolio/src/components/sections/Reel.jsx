@@ -1,14 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-const YOUTUBE_VIDEO_ID = '2n5tyYBc9Og'
-const THUMB_URL = `https://i.ytimg.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`
-const EMBED_URL =
-  `https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}` +
-  `?rel=0&modestbranding=1&color=white&iv_load_policy=3&autoplay=1`
-const WATCH_URL = `https://www.youtube.com/watch?v=${YOUTUBE_VIDEO_ID}`
+const VIMEO_ID   = '1192861848'
+const EMBED_URL  = `https://player.vimeo.com/video/${VIMEO_ID}?autoplay=1&color=ffffff&title=0&byline=0&portrait=0&dnt=1`
+const WATCH_URL  = `https://vimeo.com/${VIMEO_ID}`
+const OEMBED_URL = `https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/${VIMEO_ID}&width=1280`
 
 export default function Reel() {
-  const [playing, setPlaying] = useState(false)
+  const [playing,   setPlaying]   = useState(false)
+  const [thumbUrl,  setThumbUrl]  = useState(null)   // fetched from Vimeo oEmbed
+  const [thumbFail, setThumbFail] = useState(false)  // fallback to gradient if fetch fails
+
+  // Fetch Vimeo thumbnail via public oEmbed endpoint (no auth needed for public videos)
+  useEffect(() => {
+    fetch(OEMBED_URL)
+      .then(r => r.json())
+      .then(d => { if (d.thumbnail_url) setThumbUrl(d.thumbnail_url) })
+      .catch(() => setThumbFail(true))
+  }, [])
 
   return (
     <div id="reel">
@@ -19,7 +27,7 @@ export default function Reel() {
 
         {/*
           Outer wrapper carries the reveal animation and NEVER changes className.
-          The inner div handles click/playing state so React re-renders
+          The inner div handles click/playing state — React re-renders here
           never touch the element that .visible was added to.
         */}
         <div className="reel-embed-outer reveal-scale reveal-delay-2">
@@ -32,17 +40,22 @@ export default function Reel() {
               <iframe
                 src={EMBED_URL}
                 title="Marcos Munoz VFX Demo Reel 2025"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allow="autoplay; fullscreen; picture-in-picture"
                 allowFullScreen
               />
             ) : (
               <>
-                <img
-                  className="reel-thumb"
-                  src={THUMB_URL}
-                  alt="Demo Reel thumbnail"
-                  draggable="false"
-                />
+                {/* Thumbnail — Vimeo oEmbed image, or gradient fallback */}
+                {thumbUrl && !thumbFail ? (
+                  <img
+                    className="reel-thumb"
+                    src={thumbUrl}
+                    alt="Demo Reel thumbnail"
+                    draggable="false"
+                  />
+                ) : (
+                  <div className="reel-thumb-fallback" aria-hidden="true" />
+                )}
                 <div className="reel-thumb-overlay" />
                 <div className="reel-play-btn" aria-label="Play reel">
                   <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -56,7 +69,7 @@ export default function Reel() {
         </div>
 
         <a href={WATCH_URL} target="_blank" rel="noreferrer" className="reel-link">
-          Open on YouTube
+          Open on Vimeo
         </a>
       </div>
     </div>
