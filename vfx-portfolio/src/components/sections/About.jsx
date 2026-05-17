@@ -1,15 +1,18 @@
+import { REEL_URL, LINKEDIN, EMAIL } from '../../data/config'
 export default function About() {
   return (
     <section id="about" style={{ padding: 0 }}>
       <div className="about-grid">
-        {/* ── Visual placeholder ── */}
+        {/* ── Photo ── */}
         <div className="about-visual reveal-left">
-          <div className="about-visual-art" />
-          <div className="about-placeholder">
-            <div className="about-placeholder-ring">
-              <span className="about-placeholder-initials">MM</span>
-            </div>
-            <span className="about-placeholder-label">Marcos Muñoz</span>
+          <div className="about-photo-wrap">
+            <img
+              src="/images/trabajando.webp"
+              alt="Marcos Muñoz compositing"
+              className="about-photo"
+              draggable="false"
+            />
+            <div className="about-photo-overlay" />
           </div>
           <div className="about-caption">
             <div className="about-caption-line" />
@@ -95,8 +98,8 @@ export default function About() {
 
           <div className="about-links">
             <a href="#contact" className="about-link primary">Get in touch</a>
-            <a href="https://linkedin.com/in/marcos-munoz-reyes" target="_blank" rel="noreferrer" className="about-link">LinkedIn</a>
-            <a href="https://bit.ly/MMR-reel" target="_blank" rel="noreferrer" className="about-link">Demo Reel</a>
+            <a href={LINKEDIN} target="_blank" rel="noreferrer" className="about-link">LinkedIn</a>
+            <a href={REEL_URL} target="_blank" rel="noreferrer" className="about-link">Demo Reel</a>
           </div>
         </div>
       </div>

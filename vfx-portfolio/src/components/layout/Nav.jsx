@@ -36,8 +36,8 @@ export default function Nav({ onShowProjects }) {
     <>
       <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
         <a href="#" className="nav-logo">
-          <span className="nav-logo-mark">MM</span>
-          MARCOS MUÑOZ
+          <img src="/images/logo_web.png" alt="Marcos Muñoz" className="nav-logo-img" />
+          <span className="nav-logo-text">MARCOS MUÑOZ</span>
         </a>
 
         {/* Desktop links */}

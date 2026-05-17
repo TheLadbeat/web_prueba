@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react'
-
-const VIMEO_ID   = '1192861848'
-const EMBED_URL  = `https://player.vimeo.com/video/${VIMEO_ID}?autoplay=1&color=ffffff&title=0&byline=0&portrait=0&dnt=1`
-const WATCH_URL  = `https://vimeo.com/${VIMEO_ID}`
-const OEMBED_URL = `https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/${VIMEO_ID}&width=1280`
+import { REEL_URL, REEL_EMBED, REEL_OEMBED } from '../../data/config'
 
 export default function Reel() {
   const [playing,   setPlaying]   = useState(false)
@@ -12,7 +8,7 @@ export default function Reel() {
 
   // Fetch Vimeo thumbnail via public oEmbed endpoint (no auth needed for public videos)
   useEffect(() => {
-    fetch(OEMBED_URL)
+    fetch(OREEL_EMBED)
       .then(r => r.json())
       .then(d => { if (d.thumbnail_url) setThumbUrl(d.thumbnail_url) })
       .catch(() => setThumbFail(true))
@@ -38,7 +34,7 @@ export default function Reel() {
           >
             {playing ? (
               <iframe
-                src={EMBED_URL}
+                src={REEL_EMBED}
                 title="Marcos Munoz VFX Demo Reel 2025"
                 allow="autoplay; fullscreen; picture-in-picture"
                 allowFullScreen
@@ -68,7 +64,7 @@ export default function Reel() {
           </div>
         </div>
 
-        <a href={WATCH_URL} target="_blank" rel="noreferrer" className="reel-link">
+        <a href={REEL_URL} target="_blank" rel="noreferrer" className="reel-link">
           Open on Vimeo
         </a>
       </div>

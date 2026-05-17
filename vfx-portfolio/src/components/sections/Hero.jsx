@@ -1,39 +1,37 @@
-import { useRef } from 'react'
-import { useHeroCanvas } from '../../hooks/useHeroCanvas'
+import { REEL_URL } from '../../data/config'
 
 export default function Hero({ onShowProjects }) {
-  const canvasRef = useRef(null)
-  useHeroCanvas(canvasRef)
-
   return (
     <section id="hero">
-      <canvas id="hero-canvas" ref={canvasRef} />
-      <div className="hero-scanlines" />
+      {/* Background: subtle gradient + grain handled by CSS */}
+      <div className="hero-bg" />
       <div className="hero-vignette" />
 
       <div className="hero-content">
+
+        {/* ── LEFT: main text ── */}
         <div className="hero-left">
           <p className="hero-eyebrow">VFX Digital Compositor · Nuke · Film &amp; TV</p>
+
           <h1 className="hero-name">
-            MARCOS<br /><em>MUÑOZ</em>
+            MARCOS<br />MUÑOZ
           </h1>
+
           <p className="hero-role">
-            Two years building real shots at El Ranchito &amp; LaLivingston —
-            delivering under pressure, learning every day
+            Compositing real shots at El&nbsp;Ranchito &amp; LaLivingston.
+            Credits include <em>Society&nbsp;of&nbsp;the&nbsp;Snow</em> and{' '}
+            <em>Leave&nbsp;the&nbsp;World&nbsp;Behind</em>.
           </p>
+
           <div className="hero-avail">
             <span className="hero-avail-dot" />
             Madrid · Open to relocation
           </div>
+
           <div className="hero-actions">
-            <a
-              href="https://bit.ly/MMR-reel"
-              target="_blank"
-              rel="noreferrer"
-              className="btn-reel"
-            >
-              <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor">
-                <path d="M0 0l12 7L0 14V0z" />
+            <a href={REEL_URL} target="_blank" rel="noreferrer" className="btn-reel">
+              <svg width="11" height="13" viewBox="0 0 11 13" fill="currentColor">
+                <path d="M0 0l11 6.5L0 13V0z" />
               </svg>
               Watch Reel
             </a>
@@ -43,19 +41,23 @@ export default function Hero({ onShowProjects }) {
           </div>
         </div>
 
+        {/* ── RIGHT: poster montage image ── */}
         <div className="hero-right">
-          <ul className="hero-spec-list">
-            <li>Nuke</li>
-            <li>Mocha Pro</li>
-            <li>Blender · Maya</li>
-            <li>ComfyUI · AI</li>
-            <li>Python · ShotGrid</li>
-          </ul>
+          <div className="hero-poster-wrap">
+            <img
+              src="/images/montaje_posters.webp"
+              alt="Production credits montage"
+              className="hero-poster-img"
+              draggable="false"
+            />
+            <div className="hero-poster-overlay" />
+          </div>
           <div className="hero-scroll">
             <div className="scroll-bar" />
             <span>Scroll</span>
           </div>
         </div>
+
       </div>
     </section>
   )

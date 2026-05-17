@@ -1,3 +1,4 @@
+import { REEL_URL, LINKEDIN, EMAIL, PHONE } from '../../data/config'
 export default function Contact() {
   return (
     <section id="contact">
@@ -14,14 +15,14 @@ export default function Contact() {
           <span className="contact-loc-dot" />Based in Madrid &nbsp;·&nbsp; Open to relocation worldwide
         </p>
         <a
-          href="mailto:marcos.mu.reyes@gmail.com"
+          href={`mailto:${EMAIL}`}
           className="contact-email reveal"
         >
           marcos.mu.reyes@gmail.com
         </a>
         <div className="contact-social reveal">
           <a
-            href="https://linkedin.com/in/marcos-munoz-reyes"
+            href={LINKEDIN}
             target="_blank"
             rel="noreferrer"
             className="soc-btn"
@@ -30,7 +31,7 @@ export default function Contact() {
             in
           </a>
           <a
-            href="https://bit.ly/MMR-reel"
+            href={REEL_URL}
             target="_blank"
             rel="noreferrer"
             className="soc-btn"
@@ -39,7 +40,7 @@ export default function Contact() {
             ▶
           </a>
           <a
-            href="tel:+34664896405"
+            href={PHONE}
             className="soc-btn"
             title="Phone"
           >
