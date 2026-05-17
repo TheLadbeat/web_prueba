@@ -48,7 +48,7 @@ export const projects = [
     desc:    'VFX compositing on J.A. Bayona\'s survival epic. Roto & prep work supporting the senior team across exteriors and snow environment shots. Integration of CG elements under senior supervision on a large-scale international production.',
     studio:  'El Ranchito VFX',
     year:    '2023',
-    month:   1,  // January
+    month:   12,  // January
     role:    'VFX Junior Compositor',
     del:     'Roto & prep, CG integration, cleanup',
     tags:    ['Nuke', 'Mocha Pro', 'ShotGrid'],
@@ -57,9 +57,9 @@ export const projects = [
     featured: true,
     order:   1,           // ← 1st slot on the main grid
     images: {
-      square:  null,      // e.g. '/images/society-square.jpg'
-      wide:    null,
-      poster:  null,
+      square:  "/images/projects/2023/society_of_the_snow/square.webp",
+      wide:    "/images/projects/2023/society_of_the_snow/wide.webp",
+      poster:  "/images/projects/2023/society_of_the_snow/poster.webp",
     },
   },
 
@@ -71,7 +71,7 @@ export const projects = [
     desc:    'Compositing work on Sam Esmail\'s psychological thriller. VFX shot integration, roto and paint support for final sequences. Contributing to the visual language of one of Netflix\'s highest-profile releases of the year.',
     studio:  'El Ranchito VFX',
     year:    '2023',
-    month:   12,  // December
+    month:   11,
     role:    'VFX Junior Compositor',
     del:     'Roto, paint support, shot compositing',
     tags:    ['Nuke', 'Mocha Pro', 'ShotGrid'],
@@ -80,9 +80,9 @@ export const projects = [
     featured: true,
     order:   2,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/projects/2023/leave_the_world_behind/square.webp",
+      wide:    "/images/projects/2023/leave_the_world_behind/wide.webp",
+      poster:  "/images/projects/2023/leave_the_world_behind/poster.webp",
     },
   },
 
@@ -90,11 +90,11 @@ export const projects = [
     id:      'lionel',
     cat:     'Feature Film',
     title:   'Lionel',
-    sub:     '2025',
+    sub:     '2026',
     desc:    'Feature film VFX compositing at LaLivingston. CG-heavy shots with atmospheric effects — smoke, particles and volumetrics built in Blender and integrated into Nuke. Generative AI tools used to support specific plate requirements.',
     studio:  'LaLivingston',
-    year:    '2025',
-    month:   null,  // fill in: month 1-12 or null
+    year:    '2026',
+    month:   8,
     role:    'VFX Digital Compositor',
     del:     'CG integration, atmospherics, AI-assisted elements',
     tags:    ['Nuke', 'Blender', 'ComfyUI', 'ShotGrid'],
@@ -103,9 +103,9 @@ export const projects = [
     featured: true,
     order:   3,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/projects/2026/lionel/square.webp",
+      wide:    "/images/projects/2026/lionel/wide.webp",
+      poster:  "/images/projects/2026/lionel/poster.webp",
     },
   },
 
@@ -119,7 +119,7 @@ export const projects = [
     desc:    'Full compositing work across multiple episodes. Chroma key, set extensions, CG integration and cleanup. Working within an established VFX pipeline using ShotGrid for version management and supervisor review.',
     studio:  'LaLivingston',
     year:    '2025',
-    month:   null,  // fill in: month 1-12 or null
+    month:   10,
     role:    'VFX Digital Compositor',
     del:     'Chroma key, CG integration, cleanup',
     tags:    ['Nuke', 'Mocha Pro', 'ShotGrid'],
@@ -128,9 +128,9 @@ export const projects = [
     featured: true,
     order:   4,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/projects/2025/la_coleccionista/square.webp",
+      wide:    "/images/projects/2025/la_coleccionista/wide.webp",
+      poster:  "/images/projects/2025/la_coleccionista/poster.webp",
     },
   },
 
@@ -142,7 +142,7 @@ export const projects = [
     desc:    'VFX compositing on the second volume of the Spanish drama series. Sky replacements, environment extensions, and integration of digital elements to support the visual look of the Ibiza-set production.',
     studio:  'LaLivingston',
     year:    '2025',
-    month:   null,  // fill in: month 1-12 or null
+    month:   11,
     role:    'VFX Digital Compositor',
     del:     'Sky replacement, environment extensions, compositing',
     tags:    ['Nuke', 'Mocha Pro', 'ShotGrid'],
@@ -151,9 +151,9 @@ export const projects = [
     featured: true,
     order:   5,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/projects/2025/la_ruta/square.webp",
+      wide:    "/images/projects/2025/la_ruta/wide.webp",
+      poster:  "/images/projects/2025/la_ruta/poster.webp",
     },
   },
 
@@ -165,7 +165,7 @@ export const projects = [
     desc:    'Compositing across multiple episodes of the series. Integration of digital elements into practical scenes, cleanup and rig removal, and colour continuity work between cameras and locations.',
     studio:  'LaLivingston',
     year:    '2025',
-    month:   null,  // fill in: month 1-12 or null
+    month:   10,
     role:    'VFX Digital Compositor',
     del:     'Compositing, cleanup, colour continuity',
     tags:    ['Nuke', 'Mocha Pro', 'ShotGrid'],
@@ -174,9 +174,9 @@ export const projects = [
     featured: true,
     order:   6,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/projects/2025/nails/square.webp",
+      wide:    "/images/projects/2025/nails/wide.webp",
+      poster:  "/images/projects/2025/nails/poster.webp",
     },
   },
 
@@ -188,7 +188,7 @@ export const projects = [
     desc:    'Current production. VFX compositing work including set extensions, atmospheric effects, and shot cleanup. Using established LaLivingston pipeline for delivery and supervisor review.',
     studio:  'LaLivingston',
     year:    '2026',
-    month:   null,  // fill in: month 1-12 or null
+    month:   3,
     role:    'VFX Digital Compositor',
     del:     'Set extensions, atmospherics, cleanup',
     tags:    ['Nuke', 'Blender', 'ShotGrid'],
@@ -197,9 +197,9 @@ export const projects = [
     featured: true,
     order:   7,
     images: {
-      square:  null,
-      wide:    null,
-      poster:  null,
+      square:  "/images/projects/2026/esa_noche/square.webp",
+      wide:    "/images/projects/2026/esa_noche/wide.webp",
+      poster:  "/images/projects/2026/esa_noche/poster.webp",
     },
   },
 
@@ -213,7 +213,7 @@ export const projects = [
     desc:    'VFX compositing for Residente\'s politically charged music video. Shot compositing, element integration and colour treatment to support the bold visual direction of the production.',
     studio:  'El Ranchito VFX',
     year:    '2023',
-    month:   6,  // June
+    month:   9,
     role:    'VFX Junior Compositor',
     del:     'Compositing, element integration, colour treatment',
     tags:    ['Nuke', 'Mocha Pro'],
@@ -222,9 +222,9 @@ export const projects = [
     featured: false,
     order:   null,
     images: {
-      square:  null,
+      square:  "/images/projects/2023/resi_piedra/square.webp",
       wide:    null,
-      poster:  null,
+      poster:  "/images/projects/2023/resi_piedra/poster.webp",
     },
   },
 
@@ -236,7 +236,7 @@ export const projects = [
     desc:    'Second Residente collaboration. VFX compositing including green screen integration, digital environments and stylised colour work. Part of a high-profile artistic production with strong visual direction.',
     studio:  'El Ranchito VFX',
     year:    '2023',
-    month:   9,  // September
+    month:   7,
     role:    'VFX Junior Compositor',
     del:     'Green screen, digital environments, styling',
     tags:    ['Nuke', 'After Effects', 'Mocha Pro'],
@@ -245,9 +245,9 @@ export const projects = [
     featured: false,
     order:   null,
     images: {
-      square:  null,
+      square:  "/images/projects/2023/resi_baladista/square.webp",
       wide:    null,
-      poster:  null,
+      poster:  "/images/projects/2023/resi_baladista/poster.webp",
     },
   },
 
@@ -261,7 +261,7 @@ export const projects = [
     desc:    'High-profile Christmas campaign for El Corte Inglés. VFX compositing including product integration, beauty work and digital snow elements. Delivery adapted for multiple broadcast formats and durations.',
     studio:  'El Ranchito VFX',
     year:    '2023',
-    month:   11,  // November
+    month:   12,
     role:    'VFX Junior Compositor',
     del:     'Product integration, digital snow, multi-format delivery',
     tags:    ['Nuke', 'Maya', 'ShotGrid'],
@@ -284,7 +284,7 @@ export const projects = [
     desc:    'VFX compositing for the ALDI Christmas campaign. Integration of CG decorative elements, digital colour grading and delivery in multiple formats for TV and digital platforms.',
     studio:  'El Ranchito VFX',
     year:    '2023',
-    month:   11,  // November
+    month:   11,
     role:    'VFX Junior Compositor',
     del:     'CG integration, colour grading, multi-platform delivery',
     tags:    ['Nuke', 'Maya', 'Mocha Pro'],
@@ -309,7 +309,7 @@ export const projects = [
     desc:    'Full VFX work on this short film produced for Cáritas. From script breakdown to final delivery — environment extensions, CG element integration and compositing throughout the piece.',
     studio:  'LaLivingston',
     year:    '2025',
-    month:   null,  // fill in: month 1-12 or null
+    month:   11,
     role:    'VFX Digital Compositor',
     del:     'Set extensions, CG integration, full compositing',
     tags:    ['Nuke', 'Blender', 'ComfyUI'],
@@ -318,9 +318,9 @@ export const projects = [
     featured: false,
     order:   null,
     images: {
-      square:  null,
+      square:  "/images/projects/2025/atrapados/square.webp",
       wide:    null,
-      poster:  null,
+      poster:  "/images/projects/2025/atrapados/poster.webp",
     },
   },
 
@@ -334,7 +334,7 @@ export const projects = [
     desc:    'VFX compositing for an immersive exhibition experience about Ancient Egypt. Building visual content designed for large-format projection across multiple surfaces — a different challenge from traditional screen compositing.',
     studio:  'LaLivingston',
     year:    '2025',
-    month:   null,  // fill in: month 1-12 or null
+    month:   12,
     role:    'VFX Digital Compositor',
     del:     'Immersive VFX, large-format compositing',
     tags:    ['Nuke', 'Blender', 'After Effects'],
@@ -343,9 +343,9 @@ export const projects = [
     featured: false,
     order:   null,
     images: {
-      square:  null,
+      square:  "/images/projects/2025/cordoba/square.webp",
       wide:    null,
-      poster:  null,
+      poster:  "/images/projects/2025/cordoba/poster.webp",
     },
   },
 
@@ -357,7 +357,7 @@ export const projects = [
     desc:    'Visual content for the History of Money exhibition at Fundación Banco Santander. Compositing and VFX supporting a large-scale museum installation with multiple projection surfaces and interactive elements.',
     studio:  'LaLivingston',
     year:    '2025',
-    month:   null,  // fill in: month 1-12 or null
+    month:   12,
     role:    'VFX Digital Compositor',
     del:     'Exhibition VFX, projection mapping content',
     tags:    ['Nuke', 'After Effects', 'Blender'],
@@ -366,9 +366,9 @@ export const projects = [
     featured: false,
     order:   null,
     images: {
-      square:  null,
+      square:  "/images/projects/2025/santander/square.webp",
       wide:    null,
-      poster:  null,
+      poster:  "/images/projects/2025/santander/poster.webp",
     },
   },
 
@@ -380,7 +380,7 @@ export const projects = [
     desc:    'VFX work on an immersive VR experience dedicated to sculptor Eduardo Chillida\'s iconic Comb of the Wind installation. Compositing adapted for virtual reality delivery — a technically demanding format with zero tolerance for visual inconsistency.',
     studio:  'LaLivingston',
     year:    '2025',
-    month:   null,  // fill in: month 1-12 or null
+    month:   8,
     role:    'VFX Digital Compositor',
     del:     'VR compositing, immersive VFX',
     tags:    ['Nuke', 'Blender', 'After Effects'],
@@ -389,9 +389,9 @@ export const projects = [
     featured: false,
     order:   null,
     images: {
-      square:  null,
+      square:  "/images/projects/2025/chillida/square.webp",
       wide:    null,
-      poster:  null,
+      poster:  "/images/projects/2025/chillida/poster.webp",
     },
   },
 
