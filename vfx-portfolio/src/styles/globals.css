@@ -192,7 +192,6 @@ button { cursor: none; }
 }
 
 /* ── HERO ────────────────────────────────────────────────── */
-/* ── HERO ────────────────────────────────────────────────── */
 #hero {
   position: relative;
   height: 72vh; min-height: 520px; max-height: 860px;
@@ -927,7 +926,6 @@ section { padding: 90px var(--side); }
     linear-gradient(to right, rgba(6,6,10,.5) 0%, transparent 55%),
     linear-gradient(to top, rgba(6,6,10,.65) 0%, transparent 45%);
 }
-.about-placeholder-label { font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--dust);opacity:.5; }
 .about-caption { position:absolute;bottom:28px;left:28px;right:28px; }
 .about-caption-line { width:40px;height:1px;background:var(--gold);margin-bottom:10px; }
 .about-caption-text { font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--dust);line-height:1.6; }
@@ -1109,14 +1107,10 @@ footer {
   .stat:nth-child(odd)  { border-right: 1px solid var(--rail); }
   .stat:nth-child(even) { border-right: none; }
 
-  /* Credits */
-
   /* About */
   .about-grid    { grid-template-columns: 1fr; }
   .about-visual  { min-height: 300px; }
   .about-content { padding: 44px var(--side); }
-
-  /* Process */
 
   /* Modal */
   .modal-box   { grid-template-columns: 1fr; max-height: 88vh; width: 96vw; }
