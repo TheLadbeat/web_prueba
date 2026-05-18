@@ -1,3 +1,4 @@
+import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { useState, useEffect } from 'react'
 import Nav               from './components/layout/Nav'
 import Grain             from './components/ui/Grain'
@@ -27,7 +28,7 @@ export default function App() {
   }, [])
 
   return (
-    <>
+    <ErrorBoundary>
       {/* ── Persistent UI ── */}
       <Grain />
       <ProgressBar />
@@ -53,6 +54,6 @@ export default function App() {
         onOpenModal={setModalProject}
         onShowProjects={() => setAllOpen(true)}
       />
-    </>
+    </ErrorBoundary>
   )
 }

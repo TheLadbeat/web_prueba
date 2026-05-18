@@ -8,7 +8,7 @@ export default function Reel() {
 
   // Fetch Vimeo thumbnail via public oEmbed endpoint (no auth needed for public videos)
   useEffect(() => {
-    fetch(OREEL_EMBED)
+    fetch(REEL_OEMBED)
       .then(r => r.json())
       .then(d => { if (d.thumbnail_url) setThumbUrl(d.thumbnail_url) })
       .catch(() => setThumbFail(true))
