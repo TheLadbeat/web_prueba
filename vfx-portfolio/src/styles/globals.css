@@ -145,8 +145,6 @@ button { cursor: none; }
 }
 .nav-links a:hover        { opacity: 1; }
 .nav-links a:hover::after { width: 100%; }
-.nav-links a.active        { opacity: 1; }
-.nav-links a.active::after { width: 100%; }
 .nav-right { display: flex; gap: 20px; align-items: center; }
 .nav-cta {
   font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
@@ -306,6 +304,7 @@ button { cursor: none; }
   animation: scrollPulse 2s ease-in-out infinite;
 }
 
+@keyframes cardIn  { from{opacity:0;transform:translateY(14px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
 @keyframes slideUp  { from { opacity: 0; transform: translateY(35px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
 @keyframes scrollPulse { 0%,100% { opacity:.3; transform:scaleY(.8); } 50% { opacity:1; transform:scaleY(1); } }
@@ -565,6 +564,22 @@ section { padding: 90px var(--side); }
   overscroll-behavior: contain;
 }
 .ap-content { padding: 0 clamp(12px, 2vw, 32px) 80px; }
+/* Year section — grid-template-rows trick allows animating height:auto */
+.ap-year-section {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows .45s cubic-bezier(.4,0,.2,1),
+              opacity .35s ease;
+  opacity: 1;
+}
+.ap-year-section.empty {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+/* Inner wrapper: overflow:hidden + min-height:0 required for the collapse */
+.ap-year-section-inner { overflow: hidden; min-height: 0; }
+
 .ap-year-divider { display:flex;align-items:center;gap:24px;padding:48px 0 20px; }
 .ap-year-divider:first-child { padding-top:40px; }
 .ap-year-num {
@@ -576,7 +591,8 @@ section { padding: 90px var(--side); }
 .ap-year-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:14px; }
 .ap-card {
   position:relative;overflow:hidden;aspect-ratio:1/1;cursor:none;
-  transition:transform .35s cubic-bezier(.25,.46,.45,.94),box-shadow .35s ease,opacity .4s ease;z-index:1;
+  transition:transform .35s cubic-bezier(.25,.46,.45,.94),box-shadow .35s ease;z-index:1;
+  animation:cardIn .42s cubic-bezier(.25,.46,.45,.94) both;
 }
 .ap-card:hover { transform:scale(1.04);box-shadow:0 16px 50px rgba(0,0,0,.7),0 0 0 1px rgba(201,168,76,.25);z-index:5; }
 .ap-card-art { position:absolute;inset:0;transition:transform .7s cubic-bezier(.25,.46,.45,.94); }
@@ -761,11 +777,7 @@ section { padding: 90px var(--side); }
 
 /* Card filter animation */
 
-.ap-card.filtered-out {
-  opacity: 0;
-  transform: scale(.95);
-  pointer-events: none;
-}
+
 
 /* ── CREDITS TICKER STRIP ───────────────────────────────── */
 .ct-wrap {

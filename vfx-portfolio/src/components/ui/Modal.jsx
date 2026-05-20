@@ -80,6 +80,7 @@ export default function Modal({ project, onClose }) {
                   className="modal-poster-img"
                   src={p.images.poster}
                   alt={p.title}
+                  loading="lazy"
                 />
               ) : (
                 <>

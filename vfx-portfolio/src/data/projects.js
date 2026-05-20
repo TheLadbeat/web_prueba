@@ -48,7 +48,7 @@ export const projects = [
     desc:    'VFX compositing on J.A. Bayona\'s survival epic. Roto & prep work supporting the senior team across exteriors and snow environment shots. Integration of CG elements under senior supervision on a large-scale international production.',
     studio:  'El Ranchito VFX',
     year:    '2023',
-    month:   12,  // January
+    month:   12,  // December
     role:    'VFX Junior Compositor',
     del:     'Roto & prep, CG integration, cleanup',
     tags:    ['Nuke', 'Mocha Pro', 'ShotGrid'],

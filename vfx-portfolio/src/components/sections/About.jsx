@@ -10,6 +10,8 @@ export default function About() {
               src="/images/trabajando.webp"
               alt="Marcos Muñoz compositing"
               className="about-photo"
+              loading="lazy"
+              decoding="async"
               draggable="false"
             />
             <div className="about-photo-overlay" />
@@ -24,7 +26,7 @@ export default function About() {
 
         {/* ── Content ── */}
         <div className="about-content reveal-right">
-          <p className="about-eyebrow">04 · About</p>
+          <p className="about-eyebrow">02 · About</p>
           <h2 className="about-heading">VFX Digital<br />Compositor</h2>
 
           <p className="about-bio">

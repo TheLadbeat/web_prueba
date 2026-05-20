@@ -56,7 +56,7 @@ export default function CreditsTicker({ direction = 'left', seed = 1, speed = 42
     return () => window.removeEventListener('resize', update)
   }, [])
 
-  // Four copies ensures the track is always wider than the viewport
+  // Two copies: the loop resets at exactly one-copy width, so 2× is enough
   const COPIES = 2
   const copies = Array.from({ length: COPIES }, (_, ci) => (
     <span

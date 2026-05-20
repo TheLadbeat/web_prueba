@@ -63,10 +63,10 @@ export function useCursor() {
     const grow   = () => ring.classList.add('big')
     const shrink = () => ring.classList.remove('big')
     const handleEnter = (e) => {
-      if (e.target.closest('a, button, .wc, .wc-see-all, .ap-card, .credit-card')) grow()
+      if (e.target.closest('a, button, .wc, .wc-see-all, .ap-card')) grow()
     }
     const handleLeave = (e) => {
-      if (e.target.closest('a, button, .wc, .wc-see-all, .ap-card, .credit-card')) shrink()
+      if (e.target.closest('a, button, .wc, .wc-see-all, .ap-card')) shrink()
     }
 
     // ── iframe handling ───────────────────────────────────────

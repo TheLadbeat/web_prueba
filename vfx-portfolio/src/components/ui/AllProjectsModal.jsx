@@ -1,25 +1,35 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { projects }                    from '../../data/projects'
 import { artPalettes, accentColors }   from '../../data/palettes'
 import { lockScroll, unlockScroll }    from '../../utils/scrollLock'
 
 /**
- * All-projects modal — full-viewport overlay.
+ * All-projects modal.
  *
- * Features:
- *  - Format filter bar (All + one button per unique format).
- *  - Within each year, projects sorted by month descending (nulls last).
- *  - Filtered-out cards fade + scale down; filtered-in cards restore.
- *  - Scroll lock (ref-counted, no double-unlock).
+ * Filter animation strategy
+ * ──────────────────────────
+ * Cards are filtered in JS (not hidden with CSS), so the grid reflows
+ * without empty gaps. Each visible card gets key={id+filter} so React
+ * remounts it on every filter change, triggering the CSS cardIn animation
+ * from scratch. Stagger delay is applied via inline style based on the
+ * card's position across ALL visible projects (not per-year), so the
+ * cascade reads top-left → bottom-right naturally.
+ *
+ * Year sections stay in the DOM. When a year has zero visible projects,
+ * the section gets class "empty" which transitions max-height → 0 and
+ * opacity → 0 via CSS. When projects return, the class is removed and
+ * the section expands back.
  */
 
-function ProjectCard({ project, filteredOut, onClick }) {
+function ProjectCard({ project, filterKey, staggerIndex, onClick }) {
   const acc    = accentColors[project.color]
   const hasImg = Boolean(project.images?.square)
   return (
     <div
-      className={`ap-card${filteredOut ? ' filtered-out' : ''}`}
-      onClick={filteredOut ? undefined : () => onClick(project)}
+      key={`${project.id}-${filterKey}`}
+      className="ap-card"
+      style={{ animationDelay: `${Math.min(staggerIndex * 42, 340)}ms` }}
+      onClick={() => onClick(project)}
     >
       <div
         className={`ap-card-art${hasImg ? '' : ' gradient-only'}`}
@@ -54,14 +64,16 @@ function ProjectCard({ project, filteredOut, onClick }) {
   )
 }
 
-// Unique formats in display order (sorted by frequency desc, then alpha)
+// ── Module-level constants (computed once) ────────────────────────────────────
+
+// Unique formats sorted by frequency desc
 const ALL_FORMATS = (() => {
   const counts = {}
   projects.forEach(p => { counts[p.format] = (counts[p.format] || 0) + 1 })
   return Object.keys(counts).sort((a, b) => counts[b] - counts[a] || a.localeCompare(b))
 })()
 
-// Group and sort by year desc, then month desc within year (nulls last)
+// Projects grouped by year desc, within year sorted by month desc (nulls last)
 const BY_YEAR = (() => {
   const map = {}
   projects.forEach(p => {
@@ -81,20 +93,23 @@ const BY_YEAR = (() => {
     }))
 })()
 
+// ── Component ─────────────────────────────────────────────────────────────────
+
 export default function AllProjectsModal({ open, onClose, onOpenProject }) {
-  const bodyRef      = useRef(null)
+  const bodyRef            = useRef(null)
   const [filter, setFilter] = useState('All')
 
-  // Reset filter when modal opens
+  // Reset filter + scroll when modal opens
   useEffect(() => {
-    if (open) setFilter('All')
+    if (!open) return
+    setFilter('All')
+    if (bodyRef.current) bodyRef.current.scrollTop = 0
   }, [open])
 
-  // Scroll lock — cleanup-only pattern avoids double-unlock.
+  // Scroll lock — cleanup-only (no double-unlock)
   useEffect(() => {
     if (!open) return
     lockScroll()
-    if (bodyRef.current) bodyRef.current.scrollTop = 0
     return () => unlockScroll()
   }, [open])
 
@@ -106,9 +121,23 @@ export default function AllProjectsModal({ open, onClose, onOpenProject }) {
     return () => window.removeEventListener('keydown', h)
   }, [open, onClose])
 
-  const visibleCount = useMemo(() =>
-    filter === 'All' ? projects.length : projects.filter(p => p.format === filter).length
-  , [filter])
+  // Build visible project list — filtered, with a global stagger index
+  // We iterate years in order so the stagger index flows top-to-bottom
+  let globalStagger = 0
+  const yearSections = BY_YEAR.map(({ year, items }) => {
+    const visible = filter === 'All'
+      ? items
+      : items.filter(p => p.format === filter)
+
+    const cardsWithIndex = visible.map(p => {
+      const idx = globalStagger++
+      return { project: p, staggerIndex: idx }
+    })
+
+    return { year, all: items, visible: cardsWithIndex }
+  })
+
+  const visibleCount = yearSections.reduce((n, s) => n + s.visible.length, 0)
 
   return (
     <div className={`apm${open ? ' open' : ''}`} role="dialog" aria-modal="true">
@@ -151,25 +180,30 @@ export default function AllProjectsModal({ open, onClose, onOpenProject }) {
         {/* Scrollable body */}
         <div className="apm-body" ref={bodyRef}>
           <div className="ap-content">
-            {BY_YEAR.map(({ year, items }) => {
-              // Check if this year has any visible projects
-              const hasVisible = filter === 'All' || items.some(p => p.format === filter)
-              if (!hasVisible) return null
+            {yearSections.map(({ year, visible }) => {
+              const isEmpty = visible.length === 0
               return (
-                <div key={year}>
-                  <div className="ap-year-divider">
-                    <div className="ap-year-num">{year}</div>
-                    <div className="ap-year-line" />
-                  </div>
-                  <div className="ap-year-grid">
-                    {items.map(p => (
-                      <ProjectCard
-                        key={p.id}
-                        project={p}
-                        filteredOut={filter !== 'All' && p.format !== filter}
-                        onClick={onOpenProject}
-                      />
-                    ))}
+                <div
+                  key={year}
+                  className={`ap-year-section${isEmpty ? ' empty' : ''}`}
+                >
+                  {/* Inner wrapper required for grid-template-rows collapse trick */}
+                  <div className="ap-year-section-inner">
+                    <div className="ap-year-divider">
+                      <div className="ap-year-num">{year}</div>
+                      <div className="ap-year-line" />
+                    </div>
+                    <div className="ap-year-grid">
+                      {visible.map(({ project, staggerIndex }) => (
+                        <ProjectCard
+                          key={`${project.id}-${filter}`}
+                          project={project}
+                          filterKey={filter}
+                          staggerIndex={staggerIndex}
+                          onClick={onOpenProject}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               )
