@@ -1,6 +1,17 @@
 import { REEL_URL } from '../../data/config'
+import { useScramble } from '../../hooks/useScramble'
 
+/**
+ * Hero section.
+ *
+ * hero-name: each character is a <span> driven by useScramble.
+ * The scroll indicator sits absolute in the bottom-right of #hero
+ * (outside hero-left) so it anchors to the edge regardless of text width.
+ */
 export default function Hero({ onShowProjects }) {
+  const marcosChars = useScramble('MARCOS', { startMs: 450, duration: 700 })
+  const munozChars  = useScramble('MUÑOZ',  { startMs: 650, duration: 700 })
+
   return (
     <section id="hero">
       <div className="hero-bg" />
@@ -11,8 +22,18 @@ export default function Hero({ onShowProjects }) {
 
           <p className="hero-eyebrow">VFX Digital Compositor · Nuke · Film &amp; TV</p>
 
-          <h1 className="hero-name">
-            MARCOS<br />MUÑOZ
+          <h1 className="hero-name" aria-label="MARCOS MUÑOZ">
+            <span className="hero-word">
+              {marcosChars.map((ch, i) => (
+                <span key={i} className="hero-char">{ch}</span>
+              ))}
+            </span>
+            <br />
+            <span className="hero-word">
+              {munozChars.map((ch, i) => (
+                <span key={i} className="hero-char">{ch}</span>
+              ))}
+            </span>
           </h1>
 
           <p className="hero-role">
@@ -38,12 +59,13 @@ export default function Hero({ onShowProjects }) {
             </button>
           </div>
 
-          <div className="hero-scroll">
-            <div className="scroll-bar" />
-            <span>Scroll</span>
-          </div>
-
         </div>
+      </div>
+
+      {/* Scroll indicator — absolute, anchored to bottom-right of #hero */}
+      <div className="hero-scroll">
+        <div className="scroll-bar" />
+        <span>Scroll</span>
       </div>
     </section>
   )

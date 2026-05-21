@@ -11,7 +11,7 @@ export default function Nav({ onShowProjects }) {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  // Lock scroll when mobile drawer is open — uses shared ref-counted utility
+  // Lock scroll when mobile drawer is open
   useEffect(() => {
     if (!menuOpen) return
     lockScroll()
@@ -20,12 +20,7 @@ export default function Nav({ onShowProjects }) {
 
   const close = () => setMenuOpen(false)
 
-  const handleWork = (e) => {
-    e.preventDefault()
-    close()
-    onShowProjects()
-  }
-
+  // Scroll to a section by id
   const smoothTo = (id) => (e) => {
     e.preventDefault()
     close()
@@ -42,12 +37,16 @@ export default function Nav({ onShowProjects }) {
 
         {/* Desktop links */}
         <ul className="nav-links">
-          <li><a href="#work"    onClick={handleWork}>Work</a></li>
-          <li><a href="#about"   onClick={smoothTo('about')}>About</a></li>
+          <li><a href="#work"  onClick={smoothTo('work')} >Work</a></li>
+          <li><a href="#reel"  onClick={smoothTo('reel')} >Reel</a></li>
+          <li><a href="#tools" onClick={smoothTo('tools')}>Tools</a></li>
+          <li><a href="#about" onClick={smoothTo('about')}>About</a></li>
         </ul>
 
         <div className="nav-right">
-          <a href="#contact" className="nav-cta" onClick={smoothTo('contact')}>Get in touch</a>
+          <a href="#contact" className="nav-cta" onClick={smoothTo('contact')}>
+            Get in touch
+          </a>
         </div>
 
         {/* Mobile burger */}
@@ -63,10 +62,14 @@ export default function Nav({ onShowProjects }) {
       {/* Mobile drawer */}
       <div className={`nav-drawer${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
         <ul>
-          <li><a href="#work"    onClick={handleWork}>Work</a></li>
-          <li><a href="#about"   onClick={smoothTo('about')}>About</a></li>
+          <li><a href="#work"  onClick={smoothTo('work')} >Work</a></li>
+          <li><a href="#reel"  onClick={smoothTo('reel')} >Reel</a></li>
+          <li><a href="#tools" onClick={smoothTo('tools')}>Tools</a></li>
+          <li><a href="#about" onClick={smoothTo('about')}>About</a></li>
         </ul>
-        <a href="#contact" className="drawer-cta" onClick={smoothTo('contact')}>Get in touch</a>
+        <a href="#contact" className="drawer-cta" onClick={smoothTo('contact')}>
+          Get in touch
+        </a>
       </div>
     </>
   )
