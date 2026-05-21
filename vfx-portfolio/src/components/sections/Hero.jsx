@@ -4,13 +4,15 @@ import { useScramble } from '../../hooks/useScramble'
 /**
  * Hero section.
  *
- * hero-name: each character is a <span> driven by useScramble.
- * The scroll indicator sits absolute in the bottom-right of #hero
- * (outside hero-left) so it anchors to the edge regardless of text width.
+ * hero-name: "MARCOS MUÑOZ" as a single scramble sequence —
+ * characters resolve left-to-right, the space is preserved,
+ * so the M of MUÑOZ starts only after the S of MARCOS is done.
+ *
+ * The scroll indicator sits absolute at the bottom-right of #hero.
  */
 export default function Hero({ onShowProjects }) {
-  const marcosChars = useScramble('MARCOS', { startMs: 450, duration: 700 })
-  const munozChars  = useScramble('MUÑOZ',  { startMs: 650, duration: 700 })
+  // Single string — space between MARCOS and MUÑOZ is preserved automatically
+  const chars = useScramble('MARCOS MUÑOZ', { startMs: 600, duration: 1600 })
 
   return (
     <section id="hero">
@@ -23,17 +25,9 @@ export default function Hero({ onShowProjects }) {
           <p className="hero-eyebrow">VFX Digital Compositor · Nuke · Film &amp; TV</p>
 
           <h1 className="hero-name" aria-label="MARCOS MUÑOZ">
-            <span className="hero-word">
-              {marcosChars.map((ch, i) => (
-                <span key={i} className="hero-char">{ch}</span>
-              ))}
-            </span>
-            <br />
-            <span className="hero-word">
-              {munozChars.map((ch, i) => (
-                <span key={i} className="hero-char">{ch}</span>
-              ))}
-            </span>
+            {chars.map((ch, i) => (
+              <span key={i} className="hero-char">{ch}</span>
+            ))}
           </h1>
 
           <p className="hero-role">

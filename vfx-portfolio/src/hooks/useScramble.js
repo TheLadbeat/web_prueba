@@ -1,48 +1,54 @@
 import { useState, useEffect, useRef } from 'react'
 
-const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-function rand(chars) {
-  return chars[Math.floor(Math.random() * chars.length)]
+function rand() {
+  return CHARSET[Math.floor(Math.random() * CHARSET.length)]
 }
 
 /**
- * useScramble — resolves a string character by character with random noise.
+ * useScramble — resolves each character of `target` from random noise
+ * to its final value in a left-to-right cascade.
  *
- * Each character scrambles for a while, then snaps to its final value.
- * The space between words is preserved and never scrambles.
+ * Spaces are preserved immediately and do not scramble.
  *
- * @param {string}   target    — final text to resolve to
- * @param {number}   startMs   — ms before first char starts resolving (default 500)
- * @param {number}   duration  — ms from first to last char resolving (default 900)
- * @returns {string[]}          — array of current characters to render
+ * @param {string} target    — full string to reveal (e.g. "MARCOS MUÑOZ")
+ * @param {number} startMs   — delay before the first char resolves (ms)
+ * @param {number} duration  — time from first char to last char resolving (ms)
+ *                             Increase for a slower, more dramatic effect.
+ * @returns {string[]}         current character array to render
  */
-export function useScramble(target, { startMs = 500, duration = 900 } = {}) {
-  const chars   = target.split('')
-  const [display, setDisplay] = useState(() => chars.map(() => ' '))
-  const rafRef  = useRef(null)
+export function useScramble(target, { startMs = 600, duration = 1600 } = {}) {
+  const chars = target.split('')
+  const [display, setDisplay] = useState(() => chars.map(() => rand()))
+  const rafRef   = useRef(null)
   const startRef = useRef(null)
 
   useEffect(() => {
-    // Each char resolves at a linearly spaced time within [startMs, startMs+duration]
-    const resolveAt = chars.map((_, i) => {
-      if (chars[i] === ' ') return 0   // spaces resolve immediately
-      const nonSpaces = chars.filter(c => c !== ' ').length
-      const rank = chars.slice(0, i + 1).filter(c => c !== ' ').length - 1
-      return startMs + (duration * rank) / Math.max(nonSpaces - 1, 1)
+    // Only non-space chars participate in the cascade
+    const nonSpaceIndices = chars
+      .map((ch, i) => ch !== ' ' ? i : null)
+      .filter(i => i !== null)
+
+    // Each non-space char resolves at an evenly-spaced time across [startMs … startMs+duration]
+    const resolveAt = new Array(chars.length).fill(0)
+    nonSpaceIndices.forEach((idx, rank) => {
+      resolveAt[idx] = startMs + (duration * rank) / Math.max(nonSpaceIndices.length - 1, 1)
     })
 
     const tick = (now) => {
       if (!startRef.current) startRef.current = now
       const elapsed = now - startRef.current
 
-      setDisplay(chars.map((ch, i) => {
-        if (ch === ' ') return ' '
-        if (elapsed >= resolveAt[i]) return ch          // resolved
-        return rand(CHARSET)                             // still scrambling
-      }))
+      setDisplay(
+        chars.map((ch, i) => {
+          if (ch === ' ')              return ' '
+          if (elapsed >= resolveAt[i]) return ch    // locked to final char
+          return rand()                              // still scrambling
+        })
+      )
 
-      const allDone = chars.every((ch, i) => ch === ' ' || elapsed >= resolveAt[i])
+      const allDone = nonSpaceIndices.every(i => elapsed >= resolveAt[i])
       if (!allDone) rafRef.current = requestAnimationFrame(tick)
     }
 

@@ -211,7 +211,7 @@ button { cursor: none; }
 }
 .hero-content {
   position: relative; z-index: 3;
-  padding: 0 var(--side) 52px;
+  padding: var(--nav-h) var(--side) 52px;
   width: 100%;
   display: block;
 }
@@ -228,13 +228,13 @@ button { cursor: none; }
 .hero-name {
   font-family: 'Bricolage Grotesque', sans-serif;
   font-weight: 700;
-  font-size: clamp(80px, 15vw, 280px);
+  font-size: clamp(52px, 8.5vw, 160px);
   line-height: .88; letter-spacing: -.03em;
+  white-space: nowrap;
   opacity: 0; animation: slideUp .9s .45s ease forwards;
 }
-.hero-word { display: inline-block; }
-/* Each character is a span — display:inline prevents gaps */
-.hero-char { display: inline; }
+/* Each scramble character — inline so text flows without gaps */
+.hero-char { display: inline; font-variant-numeric: tabular-nums; }
 
 .hero-role {
   font-family: 'DM Sans', sans-serif;
@@ -1083,7 +1083,7 @@ footer {
   /* Hero */
   .hero-content { padding: 0 var(--side) 52px; grid-template-columns: 1fr; gap: 0; }
   .hero-right   { display: none; }
-  .hero-name    { font-size: clamp(56px, 16vw, 120px); letter-spacing: -.02em; }
+  .hero-name    { font-size: clamp(32px, 9vw, 80px); letter-spacing: -.02em; white-space: nowrap; }
   .hero-role    { font-size: 14px; margin-top: 16px; }
   .hero-eyebrow { font-size: 9px; margin-bottom: 14px; }
 
@@ -1129,7 +1129,7 @@ footer {
 @media (max-width: 480px) {
   .work-grid    { grid-template-columns: 1fr 1fr; gap: 2px; }
   .ap-year-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
-  .hero-name    { font-size: clamp(44px, 14vw, 80px); }
+  .hero-name    { font-size: clamp(22px, 7.5vw, 52px); white-space: nowrap; }
   .hero-actions { flex-direction: column; gap: 14px; }
   .s-header     { flex-direction: column; gap: 6px; }
 }
