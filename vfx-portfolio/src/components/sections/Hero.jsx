@@ -3,14 +3,12 @@ import { REEL_URL } from '../../data/config'
 export default function Hero({ onShowProjects }) {
   return (
     <section id="hero">
-      {/* Background: subtle gradient + grain handled by CSS */}
       <div className="hero-bg" />
       <div className="hero-vignette" />
 
       <div className="hero-content">
-
-        {/* ── LEFT: main text ── */}
         <div className="hero-left">
+
           <p className="hero-eyebrow">VFX Digital Compositor · Nuke · Film &amp; TV</p>
 
           <h1 className="hero-name">
@@ -39,25 +37,13 @@ export default function Hero({ onShowProjects }) {
               See Work →
             </button>
           </div>
-        </div>
 
-        {/* ── RIGHT: poster montage image ── */}
-        <div className="hero-right">
-          <div className="hero-poster-wrap">
-            <img
-              src="/images/montaje_posters.webp"
-              alt="Production credits montage"
-              className="hero-poster-img"
-              draggable="false"
-            />
-            <div className="hero-poster-overlay" />
-          </div>
           <div className="hero-scroll">
             <div className="scroll-bar" />
             <span>Scroll</span>
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
   )
