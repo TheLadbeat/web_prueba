@@ -102,6 +102,7 @@ export default function About() {
             <a href="#contact" className="about-link primary">Get in touch</a>
             <a href={LINKEDIN} target="_blank" rel="noreferrer" className="about-link">LinkedIn</a>
             <a href={REEL_URL} target="_blank" rel="noreferrer" className="about-link">Demo Reel</a>
+            <a href="/cv-marcos-munoz.pdf" download className="about-link">Download CV</a>
           </div>
         </div>
       </div>

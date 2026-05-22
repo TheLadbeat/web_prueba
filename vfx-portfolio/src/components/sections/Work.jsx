@@ -20,11 +20,37 @@ import { artPalettes, accentColors }  from '../../data/palettes'
 function ProjectCard({ project, isActive, onHover, onLeave, onClick }) {
   const acc    = accentColors[project.color]
   const hasImg = Boolean(project.images?.square)
+  const cardRef = React.useRef(null)
+
+  const handleMouseMove = (e) => {
+    const card = cardRef.current
+    if (!card) return
+    const { left, top, width, height } = card.getBoundingClientRect()
+    const x = (e.clientX - left) / width   // 0-1
+    const y = (e.clientY - top)  / height  // 0-1
+    const rotY =  (x - 0.5) * 14           // -7 to +7 deg
+    const rotX = -(y - 0.5) * 10           // -5 to +5 deg
+    card.style.transition = 'transform 0.08s ease'
+    card.style.transform  = `perspective(700px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.02)`
+    card.style.boxShadow  = `${-rotY * 1.5}px ${rotX * 1.5}px 28px rgba(0,0,0,.55)`
+  }
+
+  const handleMouseLeave = () => {
+    const card = cardRef.current
+    if (!card) return
+    card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease'
+    card.style.transform  = 'perspective(700px) rotateX(0deg) rotateY(0deg) scale(1)'
+    card.style.boxShadow  = ''
+    onLeave()
+  }
+
   return (
     <div
+      ref={cardRef}
       className={`wc${isActive ? ' active' : ''}`}
       onMouseEnter={onHover}
-      onMouseLeave={onLeave}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       onClick={() => onClick(project)}
     >
       <div

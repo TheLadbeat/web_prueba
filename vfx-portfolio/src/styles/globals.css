@@ -201,34 +201,29 @@ button { cursor: none; }
 
 /* Subtle dark gradient background — no canvas */
 .hero-bg {
-  position: absolute; inset: 0; z-index: 0;
+  position: absolute; inset: -20%; z-index: 0;
   background: var(--ink);
-  overflow: hidden;
 }
-/* Animated orbs for breathing light effect — pure CSS, no JS */
-.hero-orb {
-  position: absolute; border-radius: 50%;
-  pointer-events: none; will-change: transform, opacity;
+/* Rotating conic glow — pseudo-element spins slowly */
+.hero-bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: conic-gradient(
+    from 0deg at 65% 45%,
+    transparent        0deg,
+    rgba(45,28,90,.22) 60deg,
+    transparent        120deg,
+    rgba(18,35,65,.18) 200deg,
+    transparent        280deg,
+    rgba(45,28,90,.12) 330deg,
+    transparent        360deg
+  );
+  animation: conicSpin 24s linear infinite;
+  will-change: transform;
 }
-.hero-orb-1 {
-  width: 80%; height: 100%;
-  top: -10%; right: -15%;
-  background: radial-gradient(ellipse at center, rgba(55,35,100,.55) 0%, transparent 65%);
-  animation: orbFloat1 9s ease-in-out infinite alternate;
-}
-.hero-orb-2 {
-  width: 70%; height: 90%;
-  bottom: -20%; left: -15%;
-  background: radial-gradient(ellipse at center, rgba(20,45,70,.5) 0%, transparent 60%);
-  animation: orbFloat2 11s ease-in-out infinite alternate;
-}
-@keyframes orbFloat1 {
-  from { transform: translate(0, 0) scale(1);    opacity: .75; }
-  to   { transform: translate(-6%, 5%) scale(1.1); opacity: 1; }
-}
-@keyframes orbFloat2 {
-  from { transform: translate(0, 0) scale(1.05); opacity: .8; }
-  to   { transform: translate(7%, -6%) scale(1);  opacity: .55; }
+@keyframes conicSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 .hero-vignette {
   position: absolute; inset: 0; z-index: 2; pointer-events: none;
@@ -253,9 +248,9 @@ button { cursor: none; }
 .hero-name {
   font-family: 'Bricolage Grotesque', sans-serif;
   font-weight: 700;
-  font-size: clamp(48px, 8vw, 150px);
-  line-height: .85; letter-spacing: -.03em;
-  /* no white-space:nowrap — three words on separate lines */
+  font-size: clamp(60px, 10vw, 190px);
+  line-height: .87; letter-spacing: -.03em;
+  /* two display lines: "MARCOS MUÑOZ" + "REYES" */
   opacity: 0; animation: slideUp .9s .45s ease forwards;
 }
 
@@ -738,6 +733,7 @@ section { padding: 90px var(--side); }
 .hero-letter.revealed {
   clip-path: inset(0 0% 0 0);   /* fully visible */
 }
+.hero-letter-space { width: .28em; }
 /* Space between words */
 .hero-word-space { display: inline-block; width: .28em; }
 
@@ -1068,8 +1064,8 @@ footer {
 
 /* ── BACK TO TOP ─────────────────────────────────────────── */
 .back-to-top {
-  position: fixed; right: var(--side); bottom: 36px; z-index: 6000;
-  width: 42px; height: 42px; border-radius: 50%;
+  position: fixed; right: clamp(16px, 2vw, 32px); bottom: 36px; z-index: 6000;
+  width: 52px; height: 52px; border-radius: 50%;
   border: 1px solid var(--gold); background: transparent;
   color: var(--gold); cursor: none;
   display: flex; align-items: center; justify-content: center;
@@ -1142,7 +1138,7 @@ footer {
   /* Hero */
   .hero-content { padding: 0 var(--side) 52px; grid-template-columns: 1fr; gap: 0; }
   .hero-right   { display: none; }
-  .hero-name    { font-size: clamp(30px, 8.5vw, 78px); letter-spacing: -.02em; }
+  .hero-name    { font-size: clamp(36px, 9vw, 90px); letter-spacing: -.02em; }
   .hero-role    { font-size: 14px; margin-top: 16px; }
   .hero-eyebrow { font-size: 9px; margin-bottom: 14px; }
 
@@ -1188,7 +1184,7 @@ footer {
 @media (max-width: 480px) {
   .work-grid    { grid-template-columns: 1fr 1fr; gap: 2px; }
   .ap-year-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
-  .hero-name    { font-size: clamp(20px, 7vw, 48px); }
+  .hero-name    { font-size: clamp(26px, 7.5vw, 56px); }
   .hero-actions { flex-direction: column; gap: 14px; }
   .s-header     { flex-direction: column; gap: 6px; }
 }

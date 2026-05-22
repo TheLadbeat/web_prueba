@@ -2,21 +2,38 @@ import { useEffect, useRef } from 'react'
 import { REEL_URL } from '../../data/config'
 
 /**
- * Hero section — clip-path character reveal on the name.
+ * Hero — clip-path reveal, letter by letter, left to right.
  *
- * Each letter starts with clip-path:inset(0 102% 0 0) (hidden) and
- * transitions to clip-path:inset(0 0% 0 0) (visible) via CSS transition.
- * Delay is staggered: characters within a word get +50ms each, and each
- * new word adds a 150ms offset so MARCOS → MUÑOZ → REYES cascade in order.
+ * Layout: two lines
+ *   Line 1 → MARCOS MUÑOZ  (11 chars + 1 space)
+ *   Line 2 → REYES         (5 chars)
  *
- * The reveal is triggered by adding class "revealed" to each .hero-letter
- * after mount, with the stagger applied via inline transition-delay.
+ * Every character (including the space) gets its own <span>.
+ * Each span starts with clip-path:inset(0 102% 0 0) = fully hidden.
+ * A setTimeout per letter adds class "revealed" which transitions
+ * clip-path to inset(0 0% 0 0) = fully visible.
+ * Letters appear strictly one-by-one: M → A → R → C → O → S →   → M → U → Ñ → O → Z
+ * then after a small pause → R → E → Y → E → S
  */
 
-const WORDS = ['MARCOS', 'MUÑOZ', 'REYES']
-const CHAR_DELAY  = 52    // ms between consecutive characters
-const WORD_OFFSET = 160   // ms extra offset per word
-const START_DELAY = 600   // ms before first character reveals (after pageload)
+const LINE1 = 'MARCOS MUÑOZ'   // 12 chars incl. space
+const LINE2 = 'REYES'
+
+const CHAR_DELAY  = 55   // ms between consecutive letters
+const LINE_GAP    = 90   // extra ms before line 2 starts after line 1 ends
+const START       = 550  // ms before first letter appears
+
+function buildLine(str, startDelay) {
+  return str.split('').map((ch, i) => ({
+    ch,
+    delay: startDelay + i * CHAR_DELAY,
+    key: `${ch}-${i}-${startDelay}`,
+  }))
+}
+
+const line1Letters = buildLine(LINE1, START)
+const line2Start   = START + LINE1.length * CHAR_DELAY + LINE_GAP
+const line2Letters = buildLine(LINE2, line2Start)
 
 export default function Hero({ onShowProjects }) {
   const nameRef = useRef(null)
@@ -24,36 +41,16 @@ export default function Hero({ onShowProjects }) {
   useEffect(() => {
     const el = nameRef.current
     if (!el) return
-
-    // Collect all .hero-letter spans
-    const letters = Array.from(el.querySelectorAll('.hero-letter'))
-
-    // Assign each letter its delay, then add .revealed after that delay
-    letters.forEach((span, i) => {
-      const delay = parseInt(span.dataset.delay || '0', 10)
+    const spans = Array.from(el.querySelectorAll('.hero-letter'))
+    spans.forEach(span => {
+      const delay = parseInt(span.dataset.delay, 10)
       setTimeout(() => span.classList.add('revealed'), delay)
     })
   }, [])
 
-  // Build per-letter delay values
-  let letterIndex = 0
-  const wordsWithDelays = WORDS.map((word, wi) => {
-    const wordStart = START_DELAY + wi * WORD_OFFSET
-    const letters = word.split('').map((ch, ci) => {
-      const delay = wordStart + letterIndex * CHAR_DELAY
-      letterIndex++
-      return { ch, delay }
-    })
-    letterIndex++ // small extra pause between words
-    return { word, letters }
-  })
-
   return (
     <section id="hero">
-      <div className="hero-bg">
-        <div className="hero-orb hero-orb-1" />
-        <div className="hero-orb hero-orb-2" />
-      </div>
+      <div className="hero-bg" />
       <div className="hero-vignette" />
 
       <div className="hero-content">
@@ -62,20 +59,31 @@ export default function Hero({ onShowProjects }) {
           <p className="hero-eyebrow">VFX Digital Compositor · Nuke · Film &amp; TV</p>
 
           <h1 className="hero-name" ref={nameRef} aria-label="MARCOS MUÑOZ REYES">
-            {wordsWithDelays.map(({ word, letters }) => (
-              <span key={word} className="hero-word">
-                {letters.map(({ ch, delay }) => (
-                  <span
-                    key={`${word}-${delay}`}
-                    className="hero-letter"
-                    data-delay={delay}
-                    style={{ transitionDelay: `0ms` }}
-                  >
-                    {ch}
-                  </span>
-                ))}
-              </span>
-            ))}
+            {/* Line 1: MARCOS MUÑOZ */}
+            <span className="hero-word">
+              {line1Letters.map(({ ch, delay, key }) => (
+                <span
+                  key={key}
+                  className={`hero-letter${ch === ' ' ? ' hero-letter-space' : ''}`}
+                  data-delay={delay}
+                >
+                  {ch === ' ' ? '\u00A0' : ch}
+                </span>
+              ))}
+            </span>
+
+            {/* Line 2: REYES */}
+            <span className="hero-word">
+              {line2Letters.map(({ ch, delay, key }) => (
+                <span
+                  key={key}
+                  className="hero-letter"
+                  data-delay={delay}
+                >
+                  {ch}
+                </span>
+              ))}
+            </span>
           </h1>
 
           <p className="hero-role">
@@ -104,7 +112,6 @@ export default function Hero({ onShowProjects }) {
         </div>
       </div>
 
-      {/* Scroll indicator — absolute, bottom-right */}
       <div className="hero-scroll">
         <div className="scroll-bar" />
         <span>Scroll</span>
