@@ -4,15 +4,15 @@ import { useScramble } from '../../hooks/useScramble'
 /**
  * Hero section.
  *
- * hero-name: "MARCOS MUÑOZ" as a single scramble sequence —
- * characters resolve left-to-right, the space is preserved,
- * so the M of MUÑOZ starts only after the S of MARCOS is done.
+ * MARCOS and MUÑOZ each have their own scramble instance running in
+ * parallel — MUÑOZ starts 300ms later so they overlap but are offset.
+ * Both are on the same line with a non-scrambling space between them.
  *
- * The scroll indicator sits absolute at the bottom-right of #hero.
+ * The scroll indicator is absolute at the bottom-right of #hero.
  */
 export default function Hero({ onShowProjects }) {
-  // Single string — space between MARCOS and MUÑOZ is preserved automatically
-  const chars = useScramble('MARCOS MUÑOZ', { startMs: 600, duration: 1600 })
+  const marcosChars = useScramble('MARCOS', { startMs: 400, duration: 1400 })
+  const munozChars  = useScramble('MUÑOZ',  { startMs: 700, duration: 1400 })
 
   return (
     <section id="hero">
@@ -25,8 +25,12 @@ export default function Hero({ onShowProjects }) {
           <p className="hero-eyebrow">VFX Digital Compositor · Nuke · Film &amp; TV</p>
 
           <h1 className="hero-name" aria-label="MARCOS MUÑOZ">
-            {chars.map((ch, i) => (
-              <span key={i} className="hero-char">{ch}</span>
+            {marcosChars.map((ch, i) => (
+              <span key={'m' + i} className="hero-char">{ch}</span>
+            ))}
+            <span className="hero-char">&nbsp;</span>
+            {munozChars.map((ch, i) => (
+              <span key={'n' + i} className="hero-char">{ch}</span>
             ))}
           </h1>
 
@@ -56,7 +60,7 @@ export default function Hero({ onShowProjects }) {
         </div>
       </div>
 
-      {/* Scroll indicator — absolute, anchored to bottom-right of #hero */}
+      {/* Scroll indicator — absolute, bottom-right of #hero */}
       <div className="hero-scroll">
         <div className="scroll-bar" />
         <span>Scroll</span>

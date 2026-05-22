@@ -5,6 +5,7 @@ import Grain             from './components/ui/Grain'
 import ProgressBar       from './components/ui/ProgressBar'
 import Cursor            from './components/ui/Cursor'
 import Modal             from './components/ui/Modal'
+import BackToTop         from './components/ui/BackToTop'
 import AllProjectsModal  from './components/ui/AllProjectsModal'
 import MainPage          from './pages/MainPage'
 import { useReveal }     from './hooks/useReveal'
@@ -35,6 +36,7 @@ export default function App() {
       <Cursor />
 
       <Nav onShowProjects={() => setAllOpen(true)} />
+      <BackToTop />
 
       {/* All-projects modal — z 7500, sits below project-detail modal */}
       <AllProjectsModal
