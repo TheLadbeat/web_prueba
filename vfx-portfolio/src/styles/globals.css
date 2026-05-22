@@ -195,7 +195,7 @@ button { cursor: none; }
 /* ── HERO ────────────────────────────────────────────────── */
 #hero {
   position: relative;
-  height: 72vh; min-height: 520px; max-height: 860px;
+  height: 80vh; min-height: 580px; max-height: 960px;
   display: flex; align-items: center; overflow: hidden;
 }
 
@@ -213,13 +213,13 @@ button { cursor: none; }
 .hero-orb-1 {
   width: 80%; height: 100%;
   top: -10%; right: -15%;
-  background: radial-gradient(ellipse at center, rgba(28,22,48,.65) 0%, transparent 65%);
+  background: radial-gradient(ellipse at center, rgba(55,35,100,.55) 0%, transparent 65%);
   animation: orbFloat1 9s ease-in-out infinite alternate;
 }
 .hero-orb-2 {
   width: 70%; height: 90%;
   bottom: -20%; left: -15%;
-  background: radial-gradient(ellipse at center, rgba(16,12,30,.7) 0%, transparent 60%);
+  background: radial-gradient(ellipse at center, rgba(20,45,70,.5) 0%, transparent 60%);
   animation: orbFloat2 11s ease-in-out infinite alternate;
 }
 @keyframes orbFloat1 {
@@ -253,13 +253,12 @@ button { cursor: none; }
 .hero-name {
   font-family: 'Bricolage Grotesque', sans-serif;
   font-weight: 700;
-  font-size: clamp(52px, 8.5vw, 160px);
-  line-height: .88; letter-spacing: -.03em;
-  white-space: nowrap;
+  font-size: clamp(48px, 8vw, 150px);
+  line-height: .85; letter-spacing: -.03em;
+  /* no white-space:nowrap — three words on separate lines */
   opacity: 0; animation: slideUp .9s .45s ease forwards;
 }
-/* Each scramble character — inline so text flows without gaps */
-.hero-char { display: inline; font-variant-numeric: tabular-nums; }
+
 
 .hero-role {
   font-family: 'DM Sans', sans-serif;
@@ -725,6 +724,23 @@ section { padding: 90px var(--side); }
 }
 .tool-item.hovered .tool-name { opacity: 1; transform: translateY(0); }
 
+
+/* ── CLIP-PATH REVEAL (hero name) ─────────────────────────── */
+.hero-word {
+  display: block;       /* each word on its own line */
+  overflow: hidden;     /* clip-path needs this to hide chars initially */
+}
+.hero-letter {
+  display: inline-block;
+  clip-path: inset(0 102% 0 0);  /* fully hidden */
+  transition: clip-path .5s cubic-bezier(.25,.46,.45,.94);
+}
+.hero-letter.revealed {
+  clip-path: inset(0 0% 0 0);   /* fully visible */
+}
+/* Space between words */
+.hero-word-space { display: inline-block; width: .28em; }
+
 /* ── HERO AVAILABILITY BADGE ─────────────────────────────── */
 .hero-avail {
   display: inline-flex; align-items: center; gap: 7px;
@@ -1126,7 +1142,7 @@ footer {
   /* Hero */
   .hero-content { padding: 0 var(--side) 52px; grid-template-columns: 1fr; gap: 0; }
   .hero-right   { display: none; }
-  .hero-name    { font-size: clamp(32px, 9vw, 80px); letter-spacing: -.02em; white-space: nowrap; }
+  .hero-name    { font-size: clamp(30px, 8.5vw, 78px); letter-spacing: -.02em; }
   .hero-role    { font-size: 14px; margin-top: 16px; }
   .hero-eyebrow { font-size: 9px; margin-bottom: 14px; }
 
@@ -1172,7 +1188,7 @@ footer {
 @media (max-width: 480px) {
   .work-grid    { grid-template-columns: 1fr 1fr; gap: 2px; }
   .ap-year-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
-  .hero-name    { font-size: clamp(22px, 7.5vw, 52px); white-space: nowrap; }
+  .hero-name    { font-size: clamp(20px, 7vw, 48px); }
   .hero-actions { flex-direction: column; gap: 14px; }
   .s-header     { flex-direction: column; gap: 6px; }
 }

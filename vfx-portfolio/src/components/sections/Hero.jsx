@@ -1,18 +1,52 @@
+import { useEffect, useRef } from 'react'
 import { REEL_URL } from '../../data/config'
-import { useScramble } from '../../hooks/useScramble'
 
 /**
- * Hero section.
+ * Hero section — clip-path character reveal on the name.
  *
- * MARCOS and MUÑOZ each have their own scramble instance running in
- * parallel — MUÑOZ starts 300ms later so they overlap but are offset.
- * Both are on the same line with a non-scrambling space between them.
+ * Each letter starts with clip-path:inset(0 102% 0 0) (hidden) and
+ * transitions to clip-path:inset(0 0% 0 0) (visible) via CSS transition.
+ * Delay is staggered: characters within a word get +50ms each, and each
+ * new word adds a 150ms offset so MARCOS → MUÑOZ → REYES cascade in order.
  *
- * The scroll indicator is absolute at the bottom-right of #hero.
+ * The reveal is triggered by adding class "revealed" to each .hero-letter
+ * after mount, with the stagger applied via inline transition-delay.
  */
+
+const WORDS = ['MARCOS', 'MUÑOZ', 'REYES']
+const CHAR_DELAY  = 52    // ms between consecutive characters
+const WORD_OFFSET = 160   // ms extra offset per word
+const START_DELAY = 600   // ms before first character reveals (after pageload)
+
 export default function Hero({ onShowProjects }) {
-  const marcosChars = useScramble('MARCOS', { startMs: 400, duration: 900 })
-  const munozChars  = useScramble('MUÑOZ',  { startMs: 700, duration: 900 })
+  const nameRef = useRef(null)
+
+  useEffect(() => {
+    const el = nameRef.current
+    if (!el) return
+
+    // Collect all .hero-letter spans
+    const letters = Array.from(el.querySelectorAll('.hero-letter'))
+
+    // Assign each letter its delay, then add .revealed after that delay
+    letters.forEach((span, i) => {
+      const delay = parseInt(span.dataset.delay || '0', 10)
+      setTimeout(() => span.classList.add('revealed'), delay)
+    })
+  }, [])
+
+  // Build per-letter delay values
+  let letterIndex = 0
+  const wordsWithDelays = WORDS.map((word, wi) => {
+    const wordStart = START_DELAY + wi * WORD_OFFSET
+    const letters = word.split('').map((ch, ci) => {
+      const delay = wordStart + letterIndex * CHAR_DELAY
+      letterIndex++
+      return { ch, delay }
+    })
+    letterIndex++ // small extra pause between words
+    return { word, letters }
+  })
 
   return (
     <section id="hero">
@@ -27,13 +61,20 @@ export default function Hero({ onShowProjects }) {
 
           <p className="hero-eyebrow">VFX Digital Compositor · Nuke · Film &amp; TV</p>
 
-          <h1 className="hero-name" aria-label="MARCOS MUÑOZ">
-            {marcosChars.map((ch, i) => (
-              <span key={'m' + i} className="hero-char">{ch}</span>
-            ))}
-            <span className="hero-char">&nbsp;</span>
-            {munozChars.map((ch, i) => (
-              <span key={'n' + i} className="hero-char">{ch}</span>
+          <h1 className="hero-name" ref={nameRef} aria-label="MARCOS MUÑOZ REYES">
+            {wordsWithDelays.map(({ word, letters }) => (
+              <span key={word} className="hero-word">
+                {letters.map(({ ch, delay }) => (
+                  <span
+                    key={`${word}-${delay}`}
+                    className="hero-letter"
+                    data-delay={delay}
+                    style={{ transitionDelay: `0ms` }}
+                  >
+                    {ch}
+                  </span>
+                ))}
+              </span>
             ))}
           </h1>
 
@@ -63,7 +104,7 @@ export default function Hero({ onShowProjects }) {
         </div>
       </div>
 
-      {/* Scroll indicator — absolute, bottom-right of #hero */}
+      {/* Scroll indicator — absolute, bottom-right */}
       <div className="hero-scroll">
         <div className="scroll-bar" />
         <span>Scroll</span>
