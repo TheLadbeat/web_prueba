@@ -11,12 +11,15 @@ import { useScramble } from '../../hooks/useScramble'
  * The scroll indicator is absolute at the bottom-right of #hero.
  */
 export default function Hero({ onShowProjects }) {
-  const marcosChars = useScramble('MARCOS', { startMs: 400, duration: 1400 })
-  const munozChars  = useScramble('MUÑOZ',  { startMs: 700, duration: 1400 })
+  const marcosChars = useScramble('MARCOS', { startMs: 400, duration: 900 })
+  const munozChars  = useScramble('MUÑOZ',  { startMs: 700, duration: 900 })
 
   return (
     <section id="hero">
-      <div className="hero-bg" />
+      <div className="hero-bg">
+        <div className="hero-orb hero-orb-1" />
+        <div className="hero-orb hero-orb-2" />
+      </div>
       <div className="hero-vignette" />
 
       <div className="hero-content">

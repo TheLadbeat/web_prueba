@@ -12,12 +12,12 @@ export default function MainPage({ onOpenModal, onShowProjects }) {
   return (
     <main id="main-page">
       <Hero    onShowProjects={onShowProjects} />
+      <Stats />
       <Work    onOpenModal={onOpenModal} onShowProjects={onShowProjects} />
       <CreditsTicker direction="left"  seed={1} speed={100} />
       <Reel />
       <CreditsTicker direction="right" seed={7} speed={100} />
       <Tools />
-      <Stats />
       <About />
       <Contact />
       <Footer />

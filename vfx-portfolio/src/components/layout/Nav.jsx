@@ -1,7 +1,7 @@
 import { lockScroll, unlockScroll } from '../../utils/scrollLock'
 import { useState, useEffect } from 'react'
 
-const SECTIONS = ['work', 'reel', 'tools', 'about']
+const SECTIONS = ['work', 'reel', 'about']
 
 export default function Nav({ onShowProjects }) {
   const [scrolled,       setScrolled]       = useState(false)
