@@ -20,7 +20,7 @@ import { artPalettes, accentColors }  from '../../data/palettes'
 function ProjectCard({ project, isActive, onHover, onLeave, onClick }) {
   const acc    = accentColors[project.color]
   const hasImg = Boolean(project.images?.square)
-  const cardRef = React.useRef(null)
+  const cardRef = useRef(null)
 
   const handleMouseMove = (e) => {
     const card = cardRef.current
