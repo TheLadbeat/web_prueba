@@ -1,7 +1,9 @@
 import { lockScroll, unlockScroll } from '../../utils/scrollLock'
 import { useState, useEffect } from 'react'
 
-const SECTIONS = ['work', 'reel', 'about']
+const SECTIONS = ['work', 'about']  // 'reel' handled separately
+const SCROLL_TARGET = { work: 'work', reel: 'ticker-1', about: 'about' }
+const SCROLL_IDS = { work: 'work', reel: 'ticker-before-reel', about: 'about' }
 
 export default function Nav({ onShowProjects }) {
   const [scrolled,       setScrolled]       = useState(false)
@@ -39,7 +41,7 @@ export default function Nav({ onShowProjects }) {
     )
 
     SECTIONS.forEach((id) => {
-      const el = document.getElementById(id)
+      const el = document.getElementById(SCROLL_TARGET[id] || id)
       if (el) observer.observe(el)
     })
 
@@ -51,7 +53,10 @@ export default function Nav({ onShowProjects }) {
   const smoothTo = (id) => (e) => {
     e.preventDefault()
     close()
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    const el = document.getElementById(SCROLL_TARGET[id] || id)
+    if (!el) return
+    const top = el.getBoundingClientRect().top + window.scrollY - 72
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
   }
 
   return (
@@ -66,7 +71,7 @@ export default function Nav({ onShowProjects }) {
           {SECTIONS.map((id) => (
             <li key={id}>
               <a
-                href={`#${id}`}
+                href={`#${SCROLL_IDS[id] || id}`}
                 className={activeSection === id ? 'active' : ''}
                 onClick={smoothTo(id)}
               >

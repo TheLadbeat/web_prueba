@@ -14,7 +14,7 @@ export default function MainPage({ onOpenModal, onShowProjects }) {
       <Hero    onShowProjects={onShowProjects} />
       <Stats />
       <Work    onOpenModal={onOpenModal} onShowProjects={onShowProjects} />
-      <CreditsTicker direction="left"  seed={1} speed={100} />
+      <div id="ticker-1"><CreditsTicker direction="left"  seed={1} speed={100} /></div>
       <Reel />
       <CreditsTicker direction="right" seed={7} speed={100} />
       <Tools />

@@ -18,7 +18,7 @@ export default function Reel() {
     <div id="reel">
       <div className="reel-bg-glow" aria-hidden="true" />
       <div className="reel-inner">
-        <p  className="reel-label reveal">Demo Reel · 2025</p>
+        <p  className="reel-label reveal">02 · Demo Reel · 2026</p>
         <h2 className="reel-title reveal reveal-delay-1">MARCOS MUNOZ — VFX COMPOSITOR</h2>
 
         {/*
@@ -35,7 +35,7 @@ export default function Reel() {
             {playing ? (
               <iframe
                 src={REEL_EMBED}
-                title="Marcos Munoz VFX Demo Reel 2025"
+                title="Marcos Munoz VFX Demo Reel 2026"
                 allow="autoplay; fullscreen; picture-in-picture"
                 allowFullScreen
               />

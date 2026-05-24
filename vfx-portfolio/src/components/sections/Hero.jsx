@@ -4,36 +4,37 @@ import { REEL_URL } from '../../data/config'
 /**
  * Hero — clip-path reveal, letter by letter, left to right.
  *
- * Layout: two lines
- *   Line 1 → MARCOS MUÑOZ  (11 chars + 1 space)
- *   Line 2 → REYES         (5 chars)
+ * Line 1: MARCOS MUÑOZ  (on one line, each word in a nowrap group)
+ * Line 2: REYES
  *
- * Every character (including the space) gets its own <span>.
- * Each span starts with clip-path:inset(0 102% 0 0) = fully hidden.
- * A setTimeout per letter adds class "revealed" which transitions
- * clip-path to inset(0 0% 0 0) = fully visible.
- * Letters appear strictly one-by-one: M → A → R → C → O → S →   → M → U → Ñ → O → Z
- * then after a small pause → R → E → Y → E → S
+ * MARCOS and MUÑOZ are wrapped in separate inline-block spans so the
+ * browser can break the line only between them (not inside a word).
+ * This only happens on very narrow screens; on normal/mobile widths
+ * the font-size clamp keeps both words on one line.
  */
 
-const LINE1 = 'MARCOS MUÑOZ'   // 12 chars incl. space
-const LINE2 = 'REYES'
+const LINE1_W1 = 'MARCOS'
+const LINE1_W2 = 'MUÑOZ'
+const LINE2    = 'REYES'
 
-const CHAR_DELAY  = 55   // ms between consecutive letters
-const LINE_GAP    = 90   // extra ms before line 2 starts after line 1 ends
-const START       = 550  // ms before first letter appears
+const CHAR_DELAY  = 18   // ms between consecutive characters
+const WORD_GAP    = 36   // ms extra for the space between words
+const LINE_GAP    = 55   // ms extra before line 2 starts
+const START       = 280  // ms before first letter appears
 
-function buildLine(str, startDelay) {
+function buildWord(str, startDelay) {
   return str.split('').map((ch, i) => ({
     ch,
     delay: startDelay + i * CHAR_DELAY,
-    key: `${ch}-${i}-${startDelay}`,
+    key: `${str}-${i}`,
   }))
 }
 
-const line1Letters = buildLine(LINE1, START)
-const line2Start   = START + LINE1.length * CHAR_DELAY + LINE_GAP
-const line2Letters = buildLine(LINE2, line2Start)
+const w1 = buildWord(LINE1_W1, START)
+const spaceDelay = START + LINE1_W1.length * CHAR_DELAY + WORD_GAP / 2
+const w2 = buildWord(LINE1_W2, spaceDelay + WORD_GAP / 2)
+const line2Start = spaceDelay + WORD_GAP / 2 + LINE1_W2.length * CHAR_DELAY + LINE_GAP
+const w3 = buildWord(LINE2, line2Start)
 
 export default function Hero({ onShowProjects }) {
   const nameRef = useRef(null)
@@ -59,31 +60,36 @@ export default function Hero({ onShowProjects }) {
           <p className="hero-eyebrow">VFX Digital Compositor · Nuke · Film &amp; TV</p>
 
           <h1 className="hero-name" ref={nameRef} aria-label="MARCOS MUÑOZ REYES">
-            {/* Line 1: MARCOS MUÑOZ */}
+
+            {/* Line 1: MARCOS [space] MUÑOZ — each word in a no-break group */}
             <span className="hero-word">
-              {line1Letters.map(({ ch, delay, key }) => (
-                <span
-                  key={key}
-                  className={`hero-letter${ch === ' ' ? ' hero-letter-space' : ''}`}
-                  data-delay={delay}
-                >
-                  {ch === ' ' ? '\u00A0' : ch}
-                </span>
-              ))}
+              {/* MARCOS */}
+              <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+                {w1.map(({ ch, delay, key }) => (
+                  <span key={key} className="hero-letter" data-delay={delay}>{ch}</span>
+                ))}
+              </span>
+              {/* space */}
+              <span
+                className="hero-letter hero-letter-space"
+                data-delay={spaceDelay}
+                style={{ display: 'inline-block' }}
+              >&nbsp;</span>
+              {/* MUÑOZ */}
+              <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+                {w2.map(({ ch, delay, key }) => (
+                  <span key={key} className="hero-letter" data-delay={delay}>{ch}</span>
+                ))}
+              </span>
             </span>
 
             {/* Line 2: REYES */}
             <span className="hero-word">
-              {line2Letters.map(({ ch, delay, key }) => (
-                <span
-                  key={key}
-                  className="hero-letter"
-                  data-delay={delay}
-                >
-                  {ch}
-                </span>
+              {w3.map(({ ch, delay, key }) => (
+                <span key={key} className="hero-letter" data-delay={delay}>{ch}</span>
               ))}
             </span>
+
           </h1>
 
           <p className="hero-role">

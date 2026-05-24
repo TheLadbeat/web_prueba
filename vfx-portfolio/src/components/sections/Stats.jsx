@@ -1,8 +1,9 @@
+import { projects } from '../../data/projects'
 import { useCounter } from '../../hooks/useCounter'
 
 const STATS = [
   { target: 2,  suffix: '+', label: 'Years experience',      desc: 'El Ranchito · LaLivingston' },
-  { target: 15, suffix: '',  label: 'Production credits',    desc: 'Films · TV · Ads · Exhibitions' },
+  { target: projects.length, suffix: '',  label: 'Production credits',    desc: 'Films · TV · Ads · Exhibitions' },
   { target: 5,  suffix: '',  label: 'Formats',               desc: 'Film · TV · Commercial · Music Video · Exhibition' },
   { target: 10, suffix: '+', label: 'Tools',                 desc: 'Nuke · Mocha · Blender · ComfyUI…' },
 ]

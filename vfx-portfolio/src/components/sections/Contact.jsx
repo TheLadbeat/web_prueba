@@ -1,4 +1,4 @@
-import { REEL_URL, LINKEDIN, EMAIL, PHONE } from '../../data/config'
+import { EMAIL } from '../../data/config'
 export default function Contact() {
   return (
     <section id="contact">
@@ -20,34 +20,7 @@ export default function Contact() {
         >
           marcos.mu.reyes@gmail.com
         </a>
-        <div className="contact-social reveal">
-          <a
-            href={LINKEDIN}
-            target="_blank"
-            rel="noreferrer"
-            className="soc-btn"
-            title="LinkedIn"
-          >
-            in
-          </a>
-          <a
-            href={REEL_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="soc-btn"
-            title="Demo Reel"
-          >
-            ▶
-          </a>
-          <a
-            href={PHONE}
-            className="soc-btn"
-            title="Phone"
-          >
-            ☎
-          </a>
-        </div>
-      </div>
+</div>
     </section>
   )
 }
