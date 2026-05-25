@@ -1,88 +1,81 @@
 import { lockScroll, unlockScroll } from '../../utils/scrollLock'
 import { useState, useEffect } from 'react'
 
-const SECTIONS = ['work', 'about']  // 'reel' handled separately
-const SCROLL_TARGET = { work: 'work', reel: 'ticker-1', about: 'about' }
-const SCROLL_IDS = { work: 'work', reel: 'ticker-before-reel', about: 'about' }
+const OBSERVED = ['work', 'reel', 'about']
 
 export default function Nav({ onShowProjects }) {
-  const [scrolled,       setScrolled]       = useState(false)
-  const [menuOpen,       setMenuOpen]        = useState(false)
-  const [activeSection,  setActiveSection]   = useState(null)
+  const [scrolled,      setScrolled]      = useState(false)
+  const [menuOpen,      setMenuOpen]       = useState(false)
+  const [activeSection, setActiveSection]  = useState(null)
 
-  // Scrolled state for nav background
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', handler, { passive: true })
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  // Lock scroll when mobile drawer is open
   useEffect(() => {
     if (!menuOpen) return
     lockScroll()
     return () => unlockScroll()
   }, [menuOpen])
 
-  // IntersectionObserver: mark which section is in the middle of the viewport
+  // IntersectionObserver for active section highlighting
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
-          }
+          if (entry.isIntersecting) setActiveSection(entry.target.id)
         })
       },
-      {
-        threshold: 0,
-        rootMargin: '-50% 0px -50% 0px',  // fires when section centre crosses mid-screen
-      }
+      { threshold: 0, rootMargin: '-50% 0px -50% 0px' }
     )
-
-    SECTIONS.forEach((id) => {
-      const el = document.getElementById(SCROLL_TARGET[id] || id)
+    OBSERVED.forEach(id => {
+      const el = document.getElementById(id)
       if (el) observer.observe(el)
     })
-
     return () => observer.disconnect()
   }, [])
 
   const close = () => setMenuOpen(false)
 
-  const smoothTo = (id) => (e) => {
+  // Smooth scroll using scrollIntoView — CSS scroll-padding-top handles nav offset
+  const goTo = (id) => (e) => {
     e.preventDefault()
     close()
-    const el = document.getElementById(SCROLL_TARGET[id] || id)
-    if (!el) return
-    const top = el.getBoundingClientRect().top + window.scrollY - 72
-    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  const links = [
+    { label: 'Work',  id: 'work',     active: activeSection === 'work' },
+    { label: 'Reel',  id: 'ticker-1', active: activeSection === 'reel' },
+    { label: 'About', id: 'about',    active: activeSection === 'about' },
+  ]
 
   return (
     <>
       <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
-        <a href="#" className="nav-logo">
+        <a href="#" className="nav-logo" onClick={goTo('hero')}>
           <img src="/images/logo_web.png" alt="Marcos Muñoz" className="nav-logo-img" />
           <span className="nav-logo-text">MARCOS MUÑOZ</span>
         </a>
 
         <ul className="nav-links">
-          {SECTIONS.map((id) => (
+          {links.map(({ label, id, active }) => (
             <li key={id}>
               <a
-                href={`#${SCROLL_IDS[id] || id}`}
-                className={activeSection === id ? 'active' : ''}
-                onClick={smoothTo(id)}
+                href={`#${id}`}
+                className={active ? 'active' : ''}
+                onClick={goTo(id)}
               >
-                {id.charAt(0).toUpperCase() + id.slice(1)}
+                {label}
               </a>
             </li>
           ))}
         </ul>
 
         <div className="nav-right">
-          <a href="#contact" className="nav-cta" onClick={smoothTo('contact')}>
+          <a href="#contact" className="nav-cta" onClick={goTo('contact')}>
             Get in touch
           </a>
         </div>
@@ -98,15 +91,13 @@ export default function Nav({ onShowProjects }) {
 
       <div className={`nav-drawer${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
         <ul>
-          {SECTIONS.map((id) => (
+          {links.map(({ label, id }) => (
             <li key={id}>
-              <a href={`#${id}`} onClick={smoothTo(id)}>
-                {id.charAt(0).toUpperCase() + id.slice(1)}
-              </a>
+              <a href={`#${id}`} onClick={goTo(id)}>{label}</a>
             </li>
           ))}
         </ul>
-        <a href="#contact" className="drawer-cta" onClick={smoothTo('contact')}>
+        <a href="#contact" className="drawer-cta" onClick={goTo('contact')}>
           Get in touch
         </a>
       </div>

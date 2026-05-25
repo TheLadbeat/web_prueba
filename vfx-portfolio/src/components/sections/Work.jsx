@@ -28,8 +28,8 @@ function ProjectCard({ project, isActive, onHover, onLeave, onClick }) {
     const { left, top, width, height } = card.getBoundingClientRect()
     const x = (e.clientX - left) / width   // 0-1
     const y = (e.clientY - top)  / height  // 0-1
-    const rotY =  (x - 0.5) * 8            // -4 to +4 deg
-    const rotX = -(y - 0.5) * 5            // -2.5 to +2.5 deg
+    const rotY =  (x - 0.5) * 5            // -2.5 to +2.5 deg
+    const rotX = -(y - 0.5) * 3            // -1.5 to +1.5 deg
     card.style.transition = 'transform 0.08s ease'
     card.style.transform  = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.015)`
     card.style.boxShadow  = `${-rotY * 1.2}px ${rotX * 1.2}px 20px rgba(0,0,0,.45)`

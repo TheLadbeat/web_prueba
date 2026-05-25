@@ -24,11 +24,11 @@ export default function BackToTop() {
       aria-label="Back to top"
     >
       {/* Arrow up SVG */}
-      <svg width="22" height="22" viewBox="0 0 16 16" fill="none">
+      <svg width="30" height="30" viewBox="0 0 16 16" fill="none">
         <path
           d="M8 13V3M3 8l5-5 5 5"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
