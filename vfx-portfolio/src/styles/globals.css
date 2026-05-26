@@ -196,13 +196,14 @@ button { cursor: none; }
 #hero {
   position: relative;
   height: 80vh; min-height: 580px; max-height: 960px;
-  display: flex; align-items: center; overflow: hidden;
+  display: flex; align-items: center;
 }
 
 /* Subtle dark gradient background — no canvas */
 .hero-bg {
   position: absolute; inset: -20%; z-index: 0;
   background: var(--ink);
+  overflow: hidden;  /* contains orbs without clipping hero text */
 }
 /* Rotating conic glow — pseudo-element spins slowly */
 .hero-bg::before {
@@ -866,7 +867,7 @@ section { padding: 90px var(--side); }
 @keyframes reelBg { from{opacity:.6}to{opacity:1} }
 .reel-inner {
   position:relative;z-index:1;
-  padding: 70px var(--side);
+  padding: 40px var(--side);
   max-width: 100%;         /* allow player to grow beyond --max-w */
   margin: 0 auto;
   display: flex; flex-direction: column; align-items: center; gap: 36px;
@@ -879,7 +880,7 @@ section { padding: 90px var(--side); }
   font-size:clamp(28px,4vw,52px);letter-spacing:.12em;text-align:center;
 }
 /* YouTube embed container — keeps 16:9 ratio and caps width */
-.reel-embed-outer { width: 100%; max-width: 1460px; }
+.reel-embed-outer { width: 100%; max-width: 1200px; }
 .reel-embed-wrap {
   position: relative; width: 100%;
   aspect-ratio: 16 / 9;
@@ -918,7 +919,7 @@ section { padding: 90px var(--side); }
 }
 .reel-embed-wrap:not(.reel-playing):hover .reel-play-btn { transform: translate(-50%,-50%) scale(1.15); }
 .reel-link {
-  font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
+  font-size: 9px; margin-top: 0; letter-spacing: .28em; text-transform: uppercase;
   color: var(--gold); text-decoration: none;
   display: flex; align-items: center; gap: 8px;
   transition: gap .3s;
@@ -942,7 +943,7 @@ section { padding: 90px var(--side); }
 /* ── CREDITS ─────────────────────────────────────────────── */
 /* ── ABOUT ───────────────────────────────────────────────── */
 #about { padding:0; }
-.about-grid { display:grid;grid-template-columns:.6fr 1.4fr;gap:60px; }
+.about-grid { display:grid;grid-template-columns:.75fr 1.25fr;gap:60px; }
 .about-visual {
   position:relative;overflow:hidden;
   background:linear-gradient(145deg,#0a0808 0%,#1a1010 40%,#2a1818 100%);
@@ -1050,15 +1051,15 @@ footer {
 .modal-left { padding:56px 56px;overflow-y:auto;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:var(--rail) transparent; }
 .modal-close { position:absolute;top:14px;right:14px;width:34px;height:34px;background:rgba(6,6,10,.8);border:1px solid var(--rail);cursor:none;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:15px;z-index:10;transition:background .3s,border-color .3s; }
 .modal-close:hover { background:var(--red);border-color:var(--red); }
-.modal-label { font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px; }
+.modal-label { font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px; }
 .modal-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,52px);letter-spacing:.04em;line-height:1;margin-bottom:6px; }
 .modal-sub   { font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--dust);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--rail); }
-.modal-desc  { font-size:13px;line-height:1.85;color:var(--dust);margin-bottom:24px; }
+.modal-desc  { font-size:17px;line-height:1.85;color:var(--dust);margin-bottom:24px; }
 .modal-tags  { display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px; }
-.modal-tag   { font-size:8px;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--rail);padding:3px 9px;color:var(--dust); }
+.modal-tag   { font-size:11px;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--rail);padding:3px 9px;color:var(--dust); }
 .modal-meta  { display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;padding:18px 0;border-top:1px solid var(--rail);margin-top:auto; }
-.modal-meta-item .ml { font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px; }
-.modal-meta-item .mv { font-size:12px;color:var(--white); }
+.modal-meta-item .ml { font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px; }
+.modal-meta-item .mv { font-size:15px;color:var(--white); }
 
 /* Modal poster panel */
 .modal-poster { position:relative;overflow:hidden;border-left:1px solid var(--rail); }
