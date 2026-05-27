@@ -1040,12 +1040,12 @@ footer {
   position:relative;z-index:1;
   width:min(1240px,96vw);max-height:92vh;
   background:var(--panel);border:1px solid var(--rail);
-  overflow:hidden;display:grid;grid-template-columns:1fr 300px;
+  overflow:hidden;display:grid;grid-template-columns:1fr 420px;
   transform:translateY(28px) scale(.97);
   transition:transform .4s cubic-bezier(.25,.46,.45,.94);
 }
 .modal.open .modal-box { transform:translateY(0) scale(1); }
-.modal-left { padding:56px 56px;overflow-y:auto;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:var(--rail) transparent; }
+.modal-left { padding:56px 48px;overflow-y:auto;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:var(--rail) transparent; }
 .modal-close { position:absolute;top:14px;right:14px;width:34px;height:34px;background:rgba(6,6,10,.8);border:1px solid var(--rail);cursor:none;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:15px;z-index:10;transition:background .3s,border-color .3s; }
 .modal-close:hover { background:var(--red);border-color:var(--red); }
 .modal-label { font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px; }
