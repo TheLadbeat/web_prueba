@@ -197,6 +197,7 @@ button { cursor: none; }
   position: relative;
   height: 80vh; min-height: 580px; max-height: 960px;
   display: flex; align-items: center;
+  overflow: hidden;  /* prevent hero-bg from bleeding into next section */
 }
 
 /* Subtle dark gradient background — no canvas */
@@ -235,6 +236,7 @@ button { cursor: none; }
   padding: var(--nav-h) var(--side) 52px;
   width: 100%;
   display: block;
+  overflow: visible;  /* allow Ñ tilde above hero-name */
 }
 
 /* Left column */
@@ -252,6 +254,9 @@ button { cursor: none; }
   font-size: clamp(36px, 6.5vw, 128px);
   line-height: .87; letter-spacing: -.03em;
   padding-top: 0.1em;   /* space for Ñ tilde above */
+  overflow: visible;     /* ensure Ñ ascender is never clipped */
+
+  overflow: visible;     /* ensure Ñ ascender is never clipped */
   /* two display lines: "MARCOS MUÑOZ" + "REYES" */
   opacity: 0; animation: slideUp .9s .45s ease forwards;
 }
@@ -733,7 +738,7 @@ section { padding: 90px var(--side); }
   transition: clip-path .5s cubic-bezier(.25,.46,.45,.94);
 }
 .hero-letter.revealed {
-  clip-path: inset(0 0% 0 0);
+  clip-path: inset(-15% 0% 0 0);  /* negative top allows Ñ tilde to show */
 }
 .hero-letter-space { width: .28em; }
 .hero-nobreak { display: inline-block; white-space: nowrap; } /* prevents mid-word line breaks */
@@ -918,14 +923,6 @@ section { padding: 90px var(--side); }
   pointer-events: none;
 }
 .reel-embed-wrap:not(.reel-playing):hover .reel-play-btn { transform: translate(-50%,-50%) scale(1.15); }
-.reel-link {
-  font-size: 9px; margin-top: 0; letter-spacing: .28em; text-transform: uppercase;
-  color: var(--gold); text-decoration: none;
-  display: flex; align-items: center; gap: 8px;
-  transition: gap .3s;
-}
-.reel-link:hover { gap: 14px; }
-.reel-link::after { content: '→'; font-size: 13px; }
 
 /* ── STATS ───────────────────────────────────────────────── */
 #stats {
@@ -1062,7 +1059,7 @@ footer {
 .modal-meta-item .mv { font-size:15px;color:var(--white); }
 
 /* Modal poster panel */
-.modal-poster { position:relative;overflow:hidden;border-left:1px solid var(--rail); }
+.modal-poster { position:relative;overflow:hidden;flex-shrink:0;border-left:1px solid var(--rail); }
 .modal-poster-bg { position:absolute;inset:0;transition:transform .6s; }
 .modal-poster:hover .modal-poster-bg { transform:scale(1.04); }
 .modal-poster-img { position:absolute;inset:0;object-fit:cover;width:100%;height:100%; }

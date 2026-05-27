@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { REEL_URL, REEL_EMBED, REEL_OEMBED } from '../../data/config'
+import { REEL_EMBED, REEL_OEMBED } from '../../data/config'
 
 export default function Reel() {
   const [playing,   setPlaying]   = useState(false)
@@ -63,10 +63,6 @@ export default function Reel() {
             )}
           </div>
         </div>
-
-        <a href={REEL_URL} target="_blank" rel="noreferrer" className="reel-link">
-          Open on Vimeo
-        </a>
       </div>
     </div>
   )
