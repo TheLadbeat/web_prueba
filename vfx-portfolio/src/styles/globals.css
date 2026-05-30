@@ -1038,14 +1038,25 @@ footer {
 .modal-backdrop { position:absolute;inset:0;background:rgba(6,6,10,.92);backdrop-filter:blur(10px); }
 .modal-box {
   position:relative;z-index:1;
-  width:min(1240px,96vw);max-height:92vh;
+  width:min(960px,96vw);
   background:var(--panel);border:1px solid var(--rail);
-  overflow:hidden;display:grid;grid-template-columns:1fr 420px;
+  overflow:visible;          /* modal grows with content; modal-body handles scroll */
+  max-height:90vh;           /* never taller than viewport */
+  display:flex;flex-direction:column;
+  min-height:555px;          /* base height for 2:3 poster ratio */
   transform:translateY(28px) scale(.97);
   transition:transform .4s cubic-bezier(.25,.46,.45,.94);
 }
 .modal.open .modal-box { transform:translateY(0) scale(1); }
-.modal-left { padding:56px 48px;overflow-y:auto;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:var(--rail) transparent; }
+.modal-body {
+  display:grid;
+  grid-template-columns:1fr 370px;
+  min-height:555px;      /* 370px wide × 1.5 = 555px for 2:3 ratio */
+  overflow-y:auto;       /* scroll when content exceeds 90vh */
+  overflow-x:hidden;
+  flex:1;
+}
+.modal-left { padding:48px 44px;overflow-y:visible;display:flex;flex-direction:column;gap:20px;scrollbar-width:thin;scrollbar-color:var(--rail) transparent; }
 .modal-close { position:absolute;top:14px;right:14px;width:34px;height:34px;background:rgba(6,6,10,.8);border:1px solid var(--rail);cursor:none;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:15px;z-index:10;transition:background .3s,border-color .3s; }
 .modal-close:hover { background:var(--red);border-color:var(--red); }
 .modal-label { font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px; }
@@ -1059,10 +1070,17 @@ footer {
 .modal-meta-item .mv { font-size:15px;color:var(--white); }
 
 /* Modal poster panel */
-.modal-poster { position:relative;overflow:hidden;flex-shrink:0;border-left:1px solid var(--rail); }
-.modal-poster-bg { position:absolute;inset:0;transition:transform .6s; }
+.modal-poster {
+  position:sticky;top:0;        /* always fills right column as modal grows */
+  overflow:hidden;flex-shrink:0;
+  border-left:1px solid var(--rail);
+  align-self:stretch;
+  height:100%;                  /* fill full column height */
+  min-height:555px;             /* same as modal-body min-height */
+}
+.modal-poster-bg { position:absolute;inset:0;transition:transform .6s;width:100%;height:100%; }
 .modal-poster:hover .modal-poster-bg { transform:scale(1.04); }
-.modal-poster-img { position:absolute;inset:0;object-fit:cover;width:100%;height:100%; }
+.modal-poster-img { position:absolute;inset:0;object-fit:cover;object-position:center;width:100%;height:100%; }
 .modal-poster-overlay { position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,6,10,.2) 0%,rgba(6,6,10,.05) 50%,rgba(6,6,10,.55) 100%); }
 
 
@@ -1131,7 +1149,31 @@ footer {
 
 /* ── Mobile (≤ 768px) ─────────────────────────────────── */
 @media (max-width: 768px) {
-  :root { --side: 20px; --nav-h: 64px; }
+  :root { --side: 20px; --nav-h: 64px; 
+  /* Modal — mobile: single column, full scroll */
+  .modal-box    {
+    width: 96vw; max-height: 92vh;
+    overflow: hidden;            /* modal-body scrolls, not modal-box */
+  }
+  .modal-close  { position: absolute; top: 14px; right: 14px; z-index: 20; }  /* always visible — outside scroll */
+  .modal-body   {
+    grid-template-columns: 1fr;  /* single column */
+    min-height: unset;
+    overflow-y: auto;            /* finger scroll here */
+    overflow-x: hidden;
+    max-height: calc(92vh - 0px); /* fill modal-box */
+  }
+  .modal-poster {
+    position: relative;          /* not sticky on mobile */
+    aspect-ratio: 2 / 3;        /* respect poster ratio */
+    width: 100%;
+    height: auto;
+    border-left: none;
+    border-top: 1px solid var(--rail);
+    order: 2;                    /* poster after text */
+  }
+  .modal-left   { order: 1; padding: 32px 24px; }
+}
 
   /* Nav — show burger, hide links */
   .nav { padding: 16px var(--side); }
@@ -1168,10 +1210,7 @@ footer {
   .about-visual  { min-height: 300px; }
   .about-content { padding: 44px var(--side); }
 
-  /* Modal */
-  .modal-box   { grid-template-columns: 1fr; max-height: 88vh; width: 96vw; }
-  .modal-poster { display: none; }
-  .modal-left  { padding: 28px 24px; }
+  /* Modal meta — single column on mobile */
   .modal-meta  { grid-template-columns: 1fr; }
 
   footer { flex-direction: column; text-align: center; gap: 10px; }
