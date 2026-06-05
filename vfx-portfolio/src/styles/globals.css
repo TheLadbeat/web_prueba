@@ -1037,7 +1037,7 @@ footer {
 .modal-backdrop { position:absolute;inset:0;background:rgba(6,6,10,.92);backdrop-filter:blur(10px); }
 .modal-box {
   position:relative;z-index:1;
-  width:min(960px,96vw);
+  width:min(1000px,96vw);
   background:var(--panel);border:1px solid var(--rail);
   overflow:visible;          /* modal grows with content; modal-body handles scroll */
   max-height:90vh;           /* never taller than viewport */
@@ -1048,8 +1048,8 @@ footer {
 .modal.open .modal-box { transform:translateY(0) scale(1); }
 .modal-body {
   display:grid;
-  grid-template-columns:1fr 370px; /* poster = min-height (555px) × 2/3 — no circular dependency */
-  min-height:555px;
+  grid-template-columns:1fr 400px; /* poster = min-height (600px) × 2/3 — exact 2:3, no bars by default */
+  min-height:600px;
   overflow-y:auto;                  /* only scrolls if content pushes past 90vh cap */
   overflow-x:hidden;
   flex:1;
@@ -1057,11 +1057,11 @@ footer {
 .modal-left { padding:48px 44px;overflow-y:visible;display:flex;flex-direction:column;gap:20px;scrollbar-width:thin;scrollbar-color:var(--rail) transparent; }
 .modal-close { position:absolute;top:14px;right:14px;width:34px;height:34px;background:rgba(6,6,10,.8);border:1px solid var(--rail);cursor:none;display:flex;align-items:center;justify-content:center;color:var(--white);font-size:15px;z-index:10;transition:background .3s,border-color .3s; }
 .modal-close:hover { background:var(--red);border-color:var(--red); }
-.modal-label { font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px; }
-.modal-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,52px);letter-spacing:.04em;line-height:1;margin-bottom:6px; }
-.modal-sub   { font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--dust);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--rail); }
-.modal-desc  { font-size:17px;line-height:1.85;color:var(--dust);margin-bottom:24px; }
-.modal-tags  { display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px; }
+.modal-label { font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold); }
+.modal-title { font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,52px);letter-spacing:.04em;line-height:1; }
+.modal-sub   { font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--dust);padding-bottom:20px;border-bottom:1px solid var(--rail); }
+.modal-desc  { font-size:17px;line-height:1.85;color:var(--dust); }
+.modal-tags  { display:flex;flex-wrap:wrap;gap:6px; }
 .modal-tag   { font-size:11px;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--rail);padding:3px 9px;color:var(--dust); }
 .modal-meta  { display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;padding:18px 0;border-top:1px solid var(--rail);margin-top:auto; }
 .modal-meta-item .ml { font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px; }
@@ -1149,7 +1149,7 @@ footer {
   :root { --side: 20px; --nav-h: 64px; 
   /* Modal — mobile: single column, full scroll */
   .modal-box    {
-    width: 96vw; max-height: 92vh;
+    width: 100vw; max-height: 92vh;
     overflow: hidden;            /* modal-body scrolls, not modal-box */
   }
   .modal-close  { position: absolute; top: 14px; right: 14px; z-index: 20; }  /* always visible — outside scroll */
@@ -1228,6 +1228,4 @@ footer {
   .hero-name    { font-size: clamp(22px, 7vw, 48px); }
   .hero-actions { flex-direction: column; gap: 14px; }
   .s-header     { flex-direction: column; gap: 6px; }
-  /* Modal — full viewport width on small phones so poster is never tiny */
-  .modal-box    { width: 100vw; }
 }
