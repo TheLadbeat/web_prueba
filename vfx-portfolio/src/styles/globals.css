@@ -937,7 +937,6 @@ section { padding: 90px var(--side); }
 .stat-label { font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--white);opacity:.7;margin-top:10px; }
 .stat-desc  { font-size:13px;color:var(--dust);margin-top:6px;font-style:italic;font-family:'Fraunces',serif; }
 
-/* ── CREDITS ─────────────────────────────────────────────── */
 /* ── ABOUT ───────────────────────────────────────────────── */
 #about { padding:0; }
 .about-grid { display:grid;grid-template-columns:.75fr 1.25fr;gap:60px; }
@@ -1049,8 +1048,9 @@ footer {
 .modal.open .modal-box { transform:translateY(0) scale(1); }
 .modal-body {
   display:grid;
-  grid-template-columns:1fr auto;  /* poster column auto-sized by its aspect-ratio */
-  overflow-y:auto;       /* scroll when content exceeds 90vh */
+  grid-template-columns:1fr 370px; /* poster = min-height (555px) × 2/3 — no circular dependency */
+  min-height:555px;
+  overflow-y:auto;                  /* only scrolls if content pushes past 90vh cap */
   overflow-x:hidden;
   flex:1;
 }
@@ -1070,12 +1070,10 @@ footer {
 /* Modal poster panel */
 .modal-poster {
   position:sticky;top:0;
-  aspect-ratio:2/3;             /* drives column width = height×(2/3) */
-  width:auto;                    /* let aspect-ratio set the width */
-  overflow:hidden;flex-shrink:0;
+  width:100%;                    /* fills the fixed 370px column */
+  overflow:hidden;
   border-left:1px solid var(--rail);
-  align-self:stretch;
-  height:100%;                  /* fill full column height */
+  align-self:stretch;            /* height = modal-body height (≥555px) */
 }
 .modal-poster-bg { position:absolute;inset:0;transition:transform .6s;width:100%;height:100%; }
 .modal-poster:hover .modal-poster-bg { transform:scale(1.04); }
@@ -1230,4 +1228,6 @@ footer {
   .hero-name    { font-size: clamp(22px, 7vw, 48px); }
   .hero-actions { flex-direction: column; gap: 14px; }
   .s-header     { flex-direction: column; gap: 6px; }
+  /* Modal — full viewport width on small phones so poster is never tiny */
+  .modal-box    { width: 100vw; }
 }

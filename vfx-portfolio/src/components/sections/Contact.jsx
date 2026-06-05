@@ -20,7 +20,7 @@ export default function Contact() {
         >
           marcos.mu.reyes@gmail.com
         </a>
-</div>
+      </div>
     </section>
   )
 }

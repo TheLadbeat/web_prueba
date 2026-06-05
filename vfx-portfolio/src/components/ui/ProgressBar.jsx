@@ -6,7 +6,9 @@ export default function ProgressBar() {
   useEffect(() => {
     const update = () => {
       const { scrollTop, scrollHeight, clientHeight } = document.documentElement
-      const pct = scrollTop / (scrollHeight - clientHeight)
+      const pct = scrollHeight > clientHeight
+        ? scrollTop / (scrollHeight - clientHeight)
+        : 0
       setWidth(Math.round(pct * 100))
     }
     window.addEventListener('scroll', update, { passive: true })
